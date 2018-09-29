@@ -9,8 +9,11 @@ namespace AI.StateMachine.API
      */
     internal interface IStateMachine
     {
-        /// <returns> A list of all states the machine has </returns>
+        /// <returns> An IList of all states the machine has </returns>
         IList<IState> GetStates();
+
+        /// <returns> An IList of all IStates that will be active once the IStateMachine is started </returns>
+        IList<IState> GetStartStates();
 
         /// <summary>
         /// Goes through all the states of the machine and updates them.
@@ -18,5 +21,9 @@ namespace AI.StateMachine.API
         /// <param name="timeDelta"> The time that has passed since the last update </param>
         void Update(double deltaTime);
 
+        /// <summary>
+        /// Starts this IStateMachine
+        /// </summary>
+        void Start();
     }
 }
