@@ -23,7 +23,7 @@ namespace AI.StateMachine.API
         /// Called whenever this IState is active and being updated
         /// </summary>
         /// <param name="deltaTime"> The time that has passed since the last update </param>
-        void OnUpdate(double deltaTime);
+        void OnUpdate(in double deltaTime);
         
         /// <returns> Is this IState currently considering itself active? </returns>
         bool IsActive();

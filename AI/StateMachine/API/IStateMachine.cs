@@ -12,14 +12,14 @@ namespace AI.StateMachine.API
         /// <returns> An IList of all states the machine has </returns>
         IList<IState> GetStates();
 
-        /// <returns> An IList of all IStates that will be active once the IStateMachine is started </returns>
-        IList<IState> GetStartStates();
+        /// <returns> An IState that will be active once the IStateMachine is started </returns>
+        IState GetStartState();
 
         /// <summary>
         /// Goes through all the states of the machine and updates them.
         /// </summary>
         /// <param name="timeDelta"> The time that has passed since the last update </param>
-        void Update(double deltaTime);
+        void Update(in double deltaTime);
 
         /// <summary>
         /// Starts this IStateMachine

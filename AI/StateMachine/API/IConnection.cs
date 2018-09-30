@@ -16,10 +16,13 @@ namespace AI.StateMachine.API
         IState GetTargetStates();
 
         /// <summary>
-        /// Updates this connection. (= check if the statemachine should move to the next connection)
+        /// Updates this connection during the transition
         /// </summary>
-        /// <param name="deltaTime"></param>
-        void Update(float deltaTime);
+        /// <param name="deltaTime"> The time that has passed since the last update </param>
+        void UpdateTransition(in double deltaTime);
+
+        /// <returns> Can the IStateMachine move from the current IState to the target IState </returns>
+        bool CanTransition();
 
     }
 }
