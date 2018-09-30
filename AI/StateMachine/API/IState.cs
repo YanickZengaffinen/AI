@@ -10,22 +10,22 @@ namespace AI.StateMachine.API
     interface IState
     {
         /// <summary>
-        /// Called whenenver the IState is being activated
+        /// Called whenenver the <see cref="IState"/> is being activated
         /// </summary>
         void OnActivate();
 
         /// <summary>
-        /// Called whenever the IState is being deactivated
+        /// Called whenever the <see cref="IState"/> is being deactivated
         /// </summary>
         void OnDeactivate();
 
         /// <summary>
-        /// Called whenever this IState is active and being updated
+        /// Called whenever this <see cref="IState"/> is active and being updated
         /// </summary>
         /// <param name="deltaTime"> The time that has passed since the last update </param>
         void OnUpdate(in double deltaTime);
-        
-        /// <returns> Is this IState currently considering itself active? </returns>
+
+        /// <returns> Is this <see cref="IState"/> currently considering itself active? </returns>
         bool IsActive();
 
     }

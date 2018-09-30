@@ -17,19 +17,25 @@ namespace AI.StateMachine.Impl
         //An IList of all IStates this IStateMachine has
         private IList<IState> states;
 
-        //An IDictionary of all IConnections that this IStateMachine has... classified by its input IState
-        private IDictionary<IState, IList<IConnection>> connections;
+        //An IDictionary of all ITransitions that this IStateMachine has... classified by its input IState
+        private IDictionary<IState, IList<ITransition>> transitions;
 
         //A LinkedList containing all IStates that are currently active
         private LinkedList<IState> activeStates;
 
-        //A LinkedList containting all IConnections that are currently transitioning
-        private LinkedList<IConnection> transitioningConnections; 
+        //A LinkedList containting all ITransitions that are currently transitioning
+        private LinkedList<ITransition> activeTransitions; 
   
-        public StateMachine(IState startState, IList<IState> states, IDictionary<IState, IList<IConnection>> connections)
+        /// <summary>
+        /// C'tor
+        /// </summary>
+        /// <param name="startState"> The state that will be active once the <see cref="IStateMachine"/> is being started. </param>
+        /// <param name="states"> All the states that the <see cref="IStateMachine"/> has. This should also include the <paramref name="startState"/></param>
+        /// <param name="transitions"> All the <see cref="ITransition"/>s that exist between the <see cref="IState"/>s on this <see cref="IStateMachine"/></param>
+        public StateMachine(IState startState, IList<IState> states, IDictionary<IState, IList<ITransition>> transitions)
         {
             this.states = states;
-            this.connections = connections;
+            this.transitions = transitions;
             this.startState = startState;
         }
 
@@ -53,28 +59,35 @@ namespace AI.StateMachine.Impl
                 state.OnUpdate(deltaTime);
 
                 //check if the current IState should transition to another IState
-                IList<IConnection> connectionsForState = connections[state]; //we only need to consider connections that originate from active states
-                foreach(IConnection connection in connectionsForState)
+                IList<ITransition> transitionsForState = transitions[state]; //we only need to consider ITransitions that originate from active IStates
+                foreach(ITransition transition in transitionsForState)
                 {
-                    if(connection.CanTransition() && !transitioningConnections.Contains(connection))
+                    if(transition.CanTransition() && !activeTransitions.Contains(transition))
                     {
-                        transitioningConnections.AddLast(connection);
+                        activeTransitions.AddLast(transition);
                     }
                 }
             }
 
-            //update all transitioning IConnections
-            foreach(IConnection connection in transitioningConnections)
+            //update all active ITransitions
+            foreach(ITransition transition in activeTransitions)
             {
-                connection.UpdateTransition(deltaTime);
+                if(transition.UpdateTransition(deltaTime) >= 1.0f) //check if the transition has been completed
+                {
+                    OnTransitionCompleted(transition);
+                }
             }
-
-
         }
 
-        protected void ActivateState()
+        /// <summary>
+        /// Call this method in order to finalize an <see cref="ITransition"/>
+        /// This includes:
+        /// Activating the target IState
+        /// </summary>
+        /// <param name="transition"> </param>
+        protected void OnTransitionCompleted(ITransition transition)
         {
-
+            activeStates.AddLast(transition.GetTargetState());
         }
 
 

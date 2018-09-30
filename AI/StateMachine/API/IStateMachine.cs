@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AI.StateMachine.API
 {
-    /*
-     * This class contains all the states and their connections
-     */
+    /// <summary>
+    /// This class contains all the <see cref="IState"/>s and their <see cref="ITransition"/>s.
+    /// </summary>
     internal interface IStateMachine
     {
         /// <returns> An IList of all states the machine has </returns>
@@ -22,7 +22,7 @@ namespace AI.StateMachine.API
         void Update(in double deltaTime);
 
         /// <summary>
-        /// Starts this IStateMachine
+        /// Starts this <see cref="IStateMachine"/>
         /// </summary>
         void Start();
     }
