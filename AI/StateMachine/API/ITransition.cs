@@ -2,28 +2,59 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AI.StateMachine.API
+namespace AI.StateMachine
 {
-    /*
-     * Represents a transition between two states
-     */
+    /// <summary>
+    /// Represents a connection between two <see cref="IState"/>s
+    /// </summary>
     internal interface ITransition
     {
-        /// <returns> Get the the IState which this ITransition originates from</returns>
-        IState GetState();
-
-        /// <returns> Get the IState which this ITransition leads to </returns>
-        IState GetTargetState();
+        /// <summary>
+        /// Event that gets called whenever the <see cref="ITransition"/> is being updated.
+        /// </summary>
+        event EventHandler<double> OnUpdate;
 
         /// <summary>
-        /// Updates this connection during the transition
+        /// Event that gets called whenever the <see cref="ITransition"/> is being started.
+        /// </summary>
+        event EventHandler OnStart;
+
+        /// <summary>
+        /// Event that gets called whenever the <see cref="ITransition"/> is being completed.
+        /// </summary>
+        event EventHandler OnFinish;
+
+        /// <summary>
+        /// Event that gets called whenever the <see cref="ITransition"/> was running and is now being stopped.
+        /// </summary>
+        event EventHandler OnAbort;
+
+        /// <summary>
+        /// Start this <see cref="ITransition"/>
+        /// </summary>
+        void Start();
+
+        /// <summary>
+        /// Updates this connection during the transition phase
         /// </summary>
         /// <param name="deltaTime"> The time that has passed since the last update </param>
         /// <returns> The current progress of the transition. 1.0 meaning the transition is completed. </returns>
-        float UpdateTransition(in double deltaTime);
+        float Update(in double deltaTime);
 
-        /// <returns> Can the IStateMachine move from the current IState to the target IState </returns>
+        /// <summary>
+        /// Stops this <see cref="ITransition"/> if it has started already.
+        /// </summary>
+        void Stop();
+
+        /// <returns> Can the <see cref="IStateMachine"/> move from the current <see cref="IState"/> to the target <see cref="IState"/> </returns>
         bool CanTransition();
+
+
+        /// <returns> Get the the <see cref="IState"/> which this <see cref="ITransition"/> originates from</returns>
+        IState GetState();
+
+        /// <returns> Get the <see cref="IState"/> which this <see cref="ITransition"/> leads to </returns>
+        IState GetTargetState();
 
     }
 }

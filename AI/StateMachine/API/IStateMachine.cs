@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AI.StateMachine.API
+namespace AI.StateMachine
 {
     /// <summary>
     /// This class contains all the <see cref="IState"/>s and their <see cref="ITransition"/>s.
     /// </summary>
     internal interface IStateMachine
     {
-        /// <returns> An IList of all states the machine has </returns>
-        IList<IState> GetStates();
+        /// <summary>
+        /// Event that gets called whenever the <see cref="IStateMachine"/> gets started.
+        /// </summary>
+        event EventHandler OnStart;
 
-        /// <returns> An IState that will be active once the IStateMachine is started </returns>
-        IState GetStartState();
+        /// <summary>
+        /// Starts this <see cref="IStateMachine"/>
+        /// </summary>
+        void Start();
 
         /// <summary>
         /// Goes through all the states of the machine and updates them.
@@ -21,9 +25,12 @@ namespace AI.StateMachine.API
         /// <param name="timeDelta"> The time that has passed since the last update </param>
         void Update(in double deltaTime);
 
-        /// <summary>
-        /// Starts this <see cref="IStateMachine"/>
-        /// </summary>
-        void Start();
+
+        /// <returns> An IList of all states the machine has </returns>
+        IList<IState> GetStates();
+
+        /// <returns> An IState that will be active once the IStateMachine is started </returns>
+        IState GetStartState();
+
     }
 }

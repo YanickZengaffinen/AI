@@ -1,5 +1,4 @@
-﻿using AI.StateMachine.API;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,8 +23,9 @@ namespace AI.StateMachine.Impl
         private LinkedList<IState> activeStates;
 
         //A LinkedList containting all ITransitions that are currently transitioning
-        private LinkedList<ITransition> activeTransitions; 
-  
+        private LinkedList<ITransition> activeTransitions;
+
+
         /// <summary>
         /// C'tor
         /// </summary>
@@ -39,6 +39,10 @@ namespace AI.StateMachine.Impl
             this.startState = startState;
         }
 
+
+        public event EventHandler OnStart;
+
+
         public void Start()
         {
             //Clean up
@@ -46,7 +50,12 @@ namespace AI.StateMachine.Impl
 
             //Set up
             activeStates.AddLast(startState);
-            startState.OnActivate();
+            startState.Activate();
+
+            if(OnStart != null) //invoke the OnStart event which allows the user to add more functionality to the Start method
+            {
+                OnStart.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void Update(in double deltaTime)
@@ -54,13 +63,13 @@ namespace AI.StateMachine.Impl
             //TODO: the core logic of the IStateMachine
 
             //update all active IStates
-            foreach(IState state in activeStates)
+            foreach(var state in activeStates)
             {
-                state.OnUpdate(deltaTime);
+                state.Update(deltaTime);
 
                 //check if the current IState should transition to another IState
-                IList<ITransition> transitionsForState = transitions[state]; //we only need to consider ITransitions that originate from active IStates
-                foreach(ITransition transition in transitionsForState)
+                var transitionsForState = transitions[state]; //we only need to consider ITransitions that originate from active IStates
+                foreach(var transition in transitionsForState)
                 {
                     if(transition.CanTransition() && !activeTransitions.Contains(transition))
                     {
@@ -70,11 +79,11 @@ namespace AI.StateMachine.Impl
             }
 
             //update all active ITransitions
-            foreach(ITransition transition in activeTransitions)
+            foreach(var transition in activeTransitions)
             {
-                if(transition.UpdateTransition(deltaTime) >= 1.0f) //check if the transition has been completed
+                if(transition.Update(deltaTime) >= 1.0f) //check if the transition has been completed
                 {
-                    OnTransitionCompleted(transition);
+                    CompleteTransition(transition);
                 }
             }
         }
@@ -85,7 +94,7 @@ namespace AI.StateMachine.Impl
         /// Activating the target IState
         /// </summary>
         /// <param name="transition"> </param>
-        protected void OnTransitionCompleted(ITransition transition)
+        protected void CompleteTransition(ITransition transition)
         {
             activeStates.AddLast(transition.GetTargetState());
         }
