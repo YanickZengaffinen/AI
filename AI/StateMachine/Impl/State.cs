@@ -9,28 +9,24 @@ namespace AI.StateMachine.Impl
         // Keep track of whether this State is currently considered active or not
         private bool isActive = false;
 
-        public event EventHandler OnActivate;
-        public event EventHandler OnDeactivate;
-        public event EventHandler<double> OnUpdate;
+        public event EventHandler Activating;
+        public event EventHandler Deactivating;
+        public event EventHandler<double> Updating;
 
         public void Activate()
         {
             isActive = true;
 
-            if(OnActivate != null) //call the OnStateActivated event to allow the user to add more logic to the activate function
-            {
-                OnActivate.Invoke(this, EventArgs.Empty);
-            }
+            //call the OnStateActivated event to allow the user to add more logic to the activate function
+            Activating?.Invoke(this, EventArgs.Empty);
         }
 
         public void Deactivate()
         {
             isActive = false;
 
-            if(OnDeactivate != null) //call the OnStateDeactivated event to allow the user to add more logic to the deactivate function
-            {
-                OnDeactivate.Invoke(this, EventArgs.Empty);
-            }
+            //call the OnStateDeactivated event to allow the user to add more logic to the deactivate function
+            Deactivating?.Invoke(this, EventArgs.Empty);
         }
 
         public bool IsActive()
@@ -43,10 +39,8 @@ namespace AI.StateMachine.Impl
             if (!isActive) //exit the update method early if the State isn't active
                 return;
 
-            if(OnUpdate != null) //call the OnStateUpdated event to allow the user to add more logic to the update function
-            {
-                OnUpdate.Invoke(this, deltaTime);
-            }
+            //call the OnStateUpdated event to allow the user to add more logic to the update function
+            Updating?.Invoke(this, deltaTime);
         }
     }
 }

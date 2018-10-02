@@ -14,17 +14,17 @@ namespace AI.StateMachine
         /// <summary>
         /// Event that gets called whenever this <see cref="IState"/> is being activated
         /// </summary>
-        event EventHandler OnActivate;
+        event EventHandler Activating;
 
         /// <summary>
         /// Event that gets called whenever this <see cref="IState"/> is being deactivated
         /// </summary>
-        event EventHandler OnDeactivate;
+        event EventHandler Deactivating;
 
         /// <summary>
         /// Event that gets called whenever this <see cref="IState"/> is being updated
         /// </summary>
-        event EventHandler<double> OnUpdate;
+        event EventHandler<double> Updating;
 
         #endregion
 

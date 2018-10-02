@@ -27,10 +27,10 @@ namespace AI.StateMachine.Impl
         }
 
 
-        public event EventHandler OnFinish;
-        public event EventHandler<double> OnUpdate;
-        public event EventHandler OnStart;
-        public event EventHandler OnAbort;
+        public event EventHandler Finishing;
+        public event EventHandler<double> Updating;
+        public event EventHandler Starting;
+        public event EventHandler Aborting;
 
 
         /// <summary>
@@ -59,23 +59,34 @@ namespace AI.StateMachine.Impl
                 process.Start();
             }
 
-            if(OnStart != null)
-            {
-                OnStart.Invoke(this, EventArgs.Empty);
-            }
+            Starting?.Invoke(this, EventArgs.Empty);
         }
         
         public float Update(in double deltaTime)
         {
+            if (!transitioning) //leave early if the transition isn't currently happening
+                return 0;
+
             //calculate the average progress of the processes and return it
             float rVal = 0;
 
             foreach(var process in processes)
             {
-                rVal += process.Update(deltaTime);
+                rVal += Math.Min(process.Update(deltaTime), 1.0f);
             }
 
-            return rVal / processes.Count;
+            rVal /= processes.Count;
+
+            //OnUpdate event
+            Updating?.Invoke(this, deltaTime);
+
+            //check if the transition has been finished
+            if(rVal >= 1.0f)
+            {
+                Finishing?.Invoke(this, EventArgs.Empty);
+            }
+
+            return rVal;
         }
 
         public void Stop()
@@ -84,9 +95,9 @@ namespace AI.StateMachine.Impl
 
             transitioning = false;
 
-            if(wasTransitioning && OnAbort != null) //only invoke the abort event if the transition was active
+            if(wasTransitioning) //only invoke the abort event if the transition was active
             {
-                OnAbort.Invoke(this, EventArgs.Empty);
+                Aborting?.Invoke(this, EventArgs.Empty);
             }
         }
 

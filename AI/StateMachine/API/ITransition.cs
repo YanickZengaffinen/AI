@@ -12,22 +12,22 @@ namespace AI.StateMachine
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> is being updated.
         /// </summary>
-        event EventHandler<double> OnUpdate;
+        event EventHandler<double> Updating;
 
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> is being started.
         /// </summary>
-        event EventHandler OnStart;
+        event EventHandler Starting;
 
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> is being completed.
         /// </summary>
-        event EventHandler OnFinish;
+        event EventHandler Finishing;
 
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> was running and is now being stopped.
         /// </summary>
-        event EventHandler OnAbort;
+        event EventHandler Aborting;
 
         /// <summary>
         /// Start this <see cref="ITransition"/>

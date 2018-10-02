@@ -12,7 +12,7 @@ namespace AI.StateMachine
         /// <summary>
         /// Event that gets called whenever the <see cref="IStateMachine"/> gets started.
         /// </summary>
-        event EventHandler OnStart;
+        event EventHandler Starting;
 
         /// <summary>
         /// Starts this <see cref="IStateMachine"/>

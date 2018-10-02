@@ -40,7 +40,7 @@ namespace AI.StateMachine.Impl
         }
 
 
-        public event EventHandler OnStart;
+        public event EventHandler Starting;
 
 
         public void Start()
@@ -52,10 +52,8 @@ namespace AI.StateMachine.Impl
             activeStates.AddLast(startState);
             startState.Activate();
 
-            if(OnStart != null) //invoke the OnStart event which allows the user to add more functionality to the Start method
-            {
-                OnStart.Invoke(this, EventArgs.Empty);
-            }
+            //invoke the OnStart event which allows the user to add more functionality to the Start method
+            Starting?.Invoke(this, EventArgs.Empty);
         }
 
         public void Update(in double deltaTime)
@@ -96,6 +94,10 @@ namespace AI.StateMachine.Impl
         /// <param name="transition"> </param>
         protected void CompleteTransition(ITransition transition)
         {
+            //remove the old state from the list of active states
+            activeStates.Remove(transition.GetState());
+
+            //add the target state to the list of active states
             activeStates.AddLast(transition.GetTargetState());
         }
 

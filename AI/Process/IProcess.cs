@@ -11,6 +11,7 @@ namespace AI.Process
     {
         /// <summary>
         /// Start this <see cref="IProcess"/>
+        /// Also does reset the <see cref="IProcess"/> first
         /// </summary>
         void Start();
 
