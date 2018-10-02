@@ -7,7 +7,7 @@ namespace AI.StateMachine
     /// <summary>
     /// Represents a connection between two <see cref="IState"/>s
     /// </summary>
-    internal interface ITransition
+    public interface ITransition
     {
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> is being updated.

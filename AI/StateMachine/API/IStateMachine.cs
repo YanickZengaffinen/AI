@@ -5,9 +5,9 @@ using System.Text;
 namespace AI.StateMachine
 {
     /// <summary>
-    /// This class contains all the <see cref="IState"/>s and their <see cref="ITransition"/>s.
+    /// This interfaces contains all the <see cref="IState"/>s and their <see cref="ITransition"/>s.
     /// </summary>
-    internal interface IStateMachine
+    public interface IStateMachine
     {
         /// <summary>
         /// Event that gets called whenever the <see cref="IStateMachine"/> gets started.

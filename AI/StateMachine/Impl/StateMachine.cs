@@ -8,7 +8,7 @@ namespace AI.StateMachine.Impl
     /// <summary>
     /// Immutable State Machine which doesn't allow for any changes in structure
     /// </summary>
-    internal class StateMachine : IStateMachine
+    public class StateMachine : IStateMachine
     {
         //An IState that will be active on the startup of this IStateMachine
         private IState startState;

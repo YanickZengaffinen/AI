@@ -7,7 +7,7 @@ namespace AI.StateMachine
     /// <summary>
     /// Class that represents a certain behaviour
     /// </summary>
-    internal interface IState
+    public interface IState
     {
         #region Events
         

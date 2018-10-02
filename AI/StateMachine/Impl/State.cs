@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AI.StateMachine.Impl
 {
-    internal class State : IState
+    public class State : IState
     {
         // Keep track of whether this State is currently considered active or not
         private bool isActive = false;

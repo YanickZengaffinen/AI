@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AI.StateMachine.Impl
 {
-    internal class Transition : ITransition
+    public class Transition : ITransition
     {
         private IState state; //The original IState
         private IState targetState; //The IState this ITransition leads to
@@ -21,9 +21,12 @@ namespace AI.StateMachine.Impl
         /// </summary>
         /// <param name="criteria"> The criterias that must be true in order for this <see cref="ITransition"/> to happen. </param>
         /// <param name="processes"> The processes that must be completed in order for this <see cref="ITransition"/> to be finished. </param>
-        public Transition(IList<ICriteria> criteria, IList<IProcess> processes)
+        public Transition(IState state, IState targetState, IList<ICriteria> criteria, IList<IProcess> processes)
         {
+            this.state = state;
+            this.targetState = targetState;
             this.transitionCriteria = criteria;
+            this.processes = processes;
         }
 
 
