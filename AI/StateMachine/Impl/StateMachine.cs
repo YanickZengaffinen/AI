@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AI.StateMachine.Impl
 {
@@ -20,23 +19,43 @@ namespace AI.StateMachine.Impl
         private IDictionary<IState, IList<ITransition>> transitions;
 
         //A LinkedList containing all IStates that are currently active
-        private LinkedList<IState> activeStates;
+        private LinkedList<IState> activeStates = new LinkedList<IState>();
 
         //A LinkedList containting all ITransitions that are currently transitioning
-        private LinkedList<ITransition> activeTransitions;
+        private LinkedList<ITransition> activeTransitions = new LinkedList<ITransition>();
 
 
         /// <summary>
-        /// C'tor
+        /// C'tor that already takes in a dictionary of transitions ordered by their origin
         /// </summary>
         /// <param name="startState"> The state that will be active once the <see cref="IStateMachine"/> is being started. </param>
         /// <param name="states"> All the states that the <see cref="IStateMachine"/> has. This should also include the <paramref name="startState"/></param>
         /// <param name="transitions"> All the <see cref="ITransition"/>s that exist between the <see cref="IState"/>s on this <see cref="IStateMachine"/></param>
-        public StateMachine(IState startState, IList<IState> states, IDictionary<IState, IList<ITransition>> transitions)
+        public StateMachine(IState startState, IList<IState> states, IDictionary<IState, IList<ITransition>> transitions) : this(startState, states)
         {
-            this.states = states;
             this.transitions = transitions;
+        }
+
+        /// <summary>
+        /// Advanced c'tor which automatically splits up a list of transitions into groups with the same origin
+        /// </summary>
+        public StateMachine(IState startState, IList<IState> states, IList<ITransition> transitions) : this(startState, states)
+        {
+            this.transitions = new Dictionary<IState, IList<ITransition>>();
+
+            foreach(var state in states) //loop over states instead of transitions so states with no transitions will have an empty list assigned
+            {
+                this.transitions.Add(state, transitions.ToList().Where(x => x.GetOrigin() == state).ToList()); //collect all transitions that have this IState as their origin
+            }
+        }
+
+        /// <summary>
+        /// Helper c'tor as a base for more complex c'tors
+        /// </summary>
+        private StateMachine(IState startState, IList<IState> states)
+        {
             this.startState = startState;
+            this.states = states;
         }
 
 
@@ -69,19 +88,22 @@ namespace AI.StateMachine.Impl
                 var transitionsForState = transitions[state]; //we only need to consider ITransitions that originate from active IStates
                 foreach(var transition in transitionsForState)
                 {
-                    if(transition.CanTransition() && !activeTransitions.Contains(transition))
+                    if(!activeTransitions.Contains(transition) && transition.CanTransition())
                     {
+                        transition.Start();
                         activeTransitions.AddLast(transition);
                     }
                 }
             }
 
             //update all active ITransitions
-            foreach(var transition in activeTransitions)
+            ITransition currentTransition;
+            for(int i = activeTransitions.Count - 1; i >= 0; --i)
             {
-                if(transition.Update(deltaTime) >= 1.0f) //check if the transition has been completed
+                currentTransition = activeTransitions.ElementAt(i);
+                if(currentTransition.Update(deltaTime) >= 1.0f) //check if the transition has been completed
                 {
-                    CompleteTransition(transition);
+                    CompleteTransition(currentTransition);
                 }
             }
         }
@@ -94,11 +116,18 @@ namespace AI.StateMachine.Impl
         /// <param name="transition"> </param>
         protected void CompleteTransition(ITransition transition)
         {
-            //remove the old state from the list of active states
-            activeStates.Remove(transition.GetState());
+            //remove this transition from the list of active transitions. No need to call abort as it will set itself to inactive
+            activeTransitions.Remove(transition);
 
-            //add the target state to the list of active states
-            activeStates.AddLast(transition.GetTargetState());
+            //remove the old state from the list of active states and deactivate it
+            var originState = transition.GetOrigin();
+            originState.Deactivate();
+            activeStates.Remove(originState);
+            
+            //add the target state to the list of active states and activate it
+            var newlyActiveState = transition.GetTarget();
+            activeStates.AddLast(newlyActiveState);
+            newlyActiveState.Activate();
         }
 
 

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AI.StateMachine.Events;
+using System;
 
 namespace AI.StateMachine
 {
@@ -12,7 +11,7 @@ namespace AI.StateMachine
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> is being updated.
         /// </summary>
-        event EventHandler<double> Updating;
+        event EventHandler<ProgressiveUpdateEventArgs> Updating;
 
         /// <summary>
         /// Event that gets called whenever the <see cref="ITransition"/> is being started.
@@ -44,17 +43,17 @@ namespace AI.StateMachine
         /// <summary>
         /// Stops this <see cref="ITransition"/> if it has started already.
         /// </summary>
-        void Stop();
+        void Abort();
 
         /// <returns> Can the <see cref="IStateMachine"/> move from the current <see cref="IState"/> to the target <see cref="IState"/> </returns>
         bool CanTransition();
 
 
         /// <returns> Get the the <see cref="IState"/> which this <see cref="ITransition"/> originates from</returns>
-        IState GetState();
+        IState GetOrigin();
 
         /// <returns> Get the <see cref="IState"/> which this <see cref="ITransition"/> leads to </returns>
-        IState GetTargetState();
+        IState GetTarget();
 
     }
 }

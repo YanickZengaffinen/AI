@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.Process
+﻿namespace AI.Process
 {
     /// <summary>
     /// Interface 
@@ -26,6 +22,9 @@ namespace AI.Process
         /// Stops this <see cref="IProcess"/> if it has started already.
         /// </summary>
         void Stop();
+
+        /// <returns> True if the <see cref="IProcess"/> is currently considering itself active/started </returns>
+        bool IsActive();
 
     }
 }

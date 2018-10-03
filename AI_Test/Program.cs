@@ -1,6 +1,8 @@
 ﻿using AI.StateMachine;
 using AI.StateMachine.Impl;
+using AI_Test.Tests;
 using Autofac;
+using System;
 
 namespace AI_Test
 {
@@ -13,6 +15,10 @@ namespace AI_Test
             SetupDependencyInjection();
 
             new TransitionTest("Transition Test").Run();
+
+            //ask the user for permission to finish the program...
+            Console.WriteLine("Press Enter to exit window");
+            Console.ReadLine();
 
             DIScope.Dispose();
         }

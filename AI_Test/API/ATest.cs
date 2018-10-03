@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AI_Test.API
 {
@@ -17,9 +15,7 @@ namespace AI_Test.API
         //Runs the test and logs some information about it
         public void Run()
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Running test " + name);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            ConsoleUtil.WriteLine("Running test " + name, ConsoleColor.Red);
 
             Execute();
 

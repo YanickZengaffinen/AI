@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AI.StateMachine.Impl
 {
@@ -12,6 +10,13 @@ namespace AI.StateMachine.Impl
         public event EventHandler Activating;
         public event EventHandler Deactivating;
         public event EventHandler<double> Updating;
+
+        private string name;
+
+        public State(string name)
+        {
+            this.name = name;
+        }
 
         public void Activate()
         {

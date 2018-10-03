@@ -1,9 +1,10 @@
-﻿using AI.StateMachine;
+﻿using AI.Criteria;
+using AI.Process;
+using AI.StateMachine;
 using AI.StateMachine.Impl;
 using AI_Test.API;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AI_Test.Tests
 {
@@ -22,17 +23,37 @@ namespace AI_Test.Tests
             var transitions = new List<ITransition>();
 
             //start state
-            var startState = StateMachineUtil.GetDebugState();
-            allStates.Add(startState);
+            var startState = new State("startState");
+            allStates.Add(StateMachineUtil.MakeDebugState(startState));
 
             //state 2
-            var state2 = StateMachineUtil.GetDebugState();
-            allStates.Add(state2);
+            var state2 = new State("state2");
+            allStates.Add(StateMachineUtil.MakeDebugState(state2));
 
             //transitions
-            var transition = StateMachineUtil.get
+            var transition = new Transition(startState, state2, new List<ICriteria>() { new ConsoleCriteria() }, new List<IProcess>() { new TimerProcess(2) });
+            transitions.Add(StateMachineUtil.MakeDebugTransition(transition));
 
-            new StateMachine(startState, allStates, null);
+            var stateMachine = new StateMachine(startState, allStates, transitions);
+            stateMachine.Start();
+
+            //simulate the update loop
+            DateTime lastUpdate = DateTime.Now;
+
+            int loopCnt = 0;
+
+            do
+            {
+                ConsoleUtil.WriteLine("Update Loop #" + loopCnt, ConsoleColor.Green);
+                stateMachine.Update((DateTime.Now - lastUpdate).TotalSeconds);
+
+                lastUpdate = DateTime.Now;
+                loopCnt++;
+
+                Console.WriteLine("Enter x to abort update loop");
+            } while (!Console.ReadLine().Equals("x"));
+
+
         }
     }
 }

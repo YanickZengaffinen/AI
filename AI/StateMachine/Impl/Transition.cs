@@ -1,8 +1,8 @@
 ﻿using AI.Criteria;
 using AI.Process;
+using AI.StateMachine.Events;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AI.StateMachine.Impl
 {
@@ -31,7 +31,7 @@ namespace AI.StateMachine.Impl
 
 
         public event EventHandler Finishing;
-        public event EventHandler<double> Updating;
+        public event EventHandler<ProgressiveUpdateEventArgs> Updating;
         public event EventHandler Starting;
         public event EventHandler Aborting;
 
@@ -81,18 +81,19 @@ namespace AI.StateMachine.Impl
             rVal /= processes.Count;
 
             //OnUpdate event
-            Updating?.Invoke(this, deltaTime);
+            Updating?.Invoke(this, new ProgressiveUpdateEventArgs(deltaTime, rVal));
 
             //check if the transition has been finished
             if(rVal >= 1.0f)
             {
+                transitioning = false;
                 Finishing?.Invoke(this, EventArgs.Empty);
             }
 
             return rVal;
         }
 
-        public void Stop()
+        public void Abort()
         {
             bool wasTransitioning = transitioning;
 
@@ -105,12 +106,12 @@ namespace AI.StateMachine.Impl
         }
 
 
-        public IState GetState()
+        public IState GetOrigin()
         {
             return state;
         }
 
-        public IState GetTargetState()
+        public IState GetTarget()
         {
             return targetState;
         }
