@@ -1,10 +1,10 @@
-﻿using AI.Criteria;
-using AI.Process;
+﻿using AI.StateMachine.Criteria;
 using AI.StateMachine.Events;
+using AI.StateMachine.Process;
 using System;
 using System.Collections.Generic;
 
-namespace AI.StateMachine.Impl
+namespace AI.StateMachine
 {
     public class Transition : ITransition
     {

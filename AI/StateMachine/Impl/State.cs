@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AI.StateMachine.Impl
+namespace AI.StateMachine
 {
     public class State : IState
     {

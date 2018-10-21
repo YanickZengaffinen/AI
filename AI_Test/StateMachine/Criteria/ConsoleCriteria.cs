@@ -1,7 +1,7 @@
-﻿using AI.Criteria;
+﻿using AI.StateMachine.Criteria;
 using System;
 
-namespace AI_Test
+namespace AI_Test.StateMachine
 {
     public class ConsoleCriteria : ICriteria
     {

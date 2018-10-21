@@ -1,12 +1,11 @@
-﻿using AI.Criteria;
-using AI.Process;
-using AI.StateMachine;
-using AI.StateMachine.Impl;
+﻿using AI.StateMachine;
+using AI.StateMachine.Criteria;
+using AI.StateMachine.Process;
 using AI_Test.API;
 using System;
 using System.Collections.Generic;
 
-namespace AI_Test.Tests
+namespace AI_Test.StateMachine.Tests
 {
     internal class TransitionTest : ATest
     {
@@ -34,7 +33,7 @@ namespace AI_Test.Tests
             var transition = new Transition(startState, state2, new List<ICriteria>() { new ConsoleCriteria() }, new List<IProcess>() { new TimerProcess(2) });
             transitions.Add(StateMachineUtil.MakeDebugTransition(transition));
 
-            var stateMachine = new StateMachine(startState, allStates, transitions);
+            var stateMachine = new AI.StateMachine.StateMachine(startState, allStates, transitions);
             stateMachine.Start();
 
             //simulate the update loop

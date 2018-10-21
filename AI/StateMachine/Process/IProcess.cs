@@ -1,4 +1,4 @@
-﻿namespace AI.Process
+﻿namespace AI.StateMachine.Process
 {
     /// <summary>
     /// Interface 

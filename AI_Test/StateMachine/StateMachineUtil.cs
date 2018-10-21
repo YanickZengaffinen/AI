@@ -4,11 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Autofac;
-using AI.StateMachine.Impl;
-using AI.Process;
-using AI.Criteria;
 
-namespace AI_Test
+namespace AI_Test.StateMachine
 {
     internal static class StateMachineUtil
     {

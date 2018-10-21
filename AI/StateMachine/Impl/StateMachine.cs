@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AI.StateMachine.Impl
+namespace AI.StateMachine
 {
     /// <summary>
     /// Immutable State Machine which doesn't allow for any changes in structure

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AI.Criteria
+namespace AI.StateMachine.Criteria
 {
     /// <summary>
     /// Interfaces that allows the user to check if a certain criteria is fullfilled or not

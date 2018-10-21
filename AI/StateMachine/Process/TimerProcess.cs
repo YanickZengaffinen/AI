@@ -1,4 +1,4 @@
-﻿namespace AI.Process
+﻿namespace AI.StateMachine.Process
 {
     /// <summary>
     /// Class that provides a simple version of an <see cref="IProcess"/> which takes a certain amount of time to complete
