@@ -1,27 +1,38 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
     /// Fully connected feed forward neural network
     /// </summary>
+    [System.Serializable]
     public class Network : INetwork
     {
         public ILayer InputLayer { get; }
         public ILayer[] HiddenLayers { get; }
         public ILayer OutputLayer { get; }
-        
+
+        public IList<INeuron> Neurons { get; }
+
         public Network(ILayer inputLayer, ILayer[] hiddenLayers, ILayer outputLayer)
         {
             this.InputLayer = inputLayer;
             this.HiddenLayers = hiddenLayers;
             this.OutputLayer = outputLayer;
+
+            this.Neurons = InputLayer.Neurons.Concat(OutputLayer.Neurons).Concat(HiddenLayers.SelectMany(x => x.Neurons)).ToList();
+        }
+
+        public INeuron this[int index]
+        {
+            get { return Neurons.First(x => x.Id == index); }
         }
 
         public void Calculate(double[] inputValues)
         {
             //set all the values of the input layer
-            for(int i = 0; i < InputLayer.Neurons.Length; i++)
+            for(int i = 0; i < InputLayer.Neurons.Count; i++)
             {
                 InputLayer.Neurons[i].Value = inputValues[i];
             }
@@ -29,11 +40,11 @@ namespace AI.NeuralNetworks.FeedForward
             //calculate the hidden layers... layer by layer
             for(int i = 0; i < HiddenLayers.Length; i++)
             {
-                HiddenLayers[i].Calculate();
+                HiddenLayers[i].Calculate(this);
             }
 
             //calculate the output layer
-            OutputLayer.Calculate();
+            OutputLayer.Calculate(this);
         }
 
         public INetwork Clone()

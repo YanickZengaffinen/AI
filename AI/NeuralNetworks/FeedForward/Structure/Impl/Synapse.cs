@@ -3,27 +3,28 @@
     /// <summary>
     /// A feed forward synapse
     /// </summary>
+    [System.Serializable]
     public class Synapse : ISynapse
     {
         public double Weight { get; set; }
 
-        public INeuron Sender { get; }
-        public INeuron Receiver { get; }
+        public int SenderId { get; }
+        public int ReceiverId { get; }
 
         /// <summary>
         /// Basic c'tor
         /// </summary>
-        public Synapse(INeuron sender, INeuron receiver, in double weight)
+        public Synapse(in int senderId, in int receiverId, in double weight)
         {
-            this.Sender = sender;
-            this.Receiver = receiver;
+            this.SenderId = senderId;
+            this.ReceiverId = receiverId;
 
             this.Weight = weight;
         }
 
         public ISynapse Clone()
         {
-            throw new System.NotImplementedException();
+            return new Synapse(SenderId, ReceiverId, Weight);
         }
     }
 }

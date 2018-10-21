@@ -65,7 +65,7 @@ namespace AI.NeuralNetworks.FeedForward
             for(int i = 0; i < layerA.Size; i++)
             {
                 var neuron = layerA[i];
-                neuron.OutgoingSynapses = layerB.Neurons.Select(x => new Synapse(neuron, x, random.Generate())).ToArray();
+                neuron.OutgoingSynapses = layerB.Neurons.Select(x => new Synapse(neuron.Id, x.Id, random.Generate())).ToArray();
             }
 
             for(int i = 0; i < layerB.Size; i++)
@@ -88,10 +88,12 @@ namespace AI.NeuralNetworks.FeedForward
         private static INetwork GenerateLayers(IActivationFunction activationFunction, 
             in uint inputLayerSize, in uint outputLayerSize, params uint[] hiddenLayerSizes)
         {
+            int currentId = 0;
+
             return new Network(
-                GenerateLayer(activationFunction, inputLayerSize), 
-                hiddenLayerSizes.Select(x => GenerateLayer(activationFunction, x)).ToArray(), 
-                GenerateLayer(activationFunction, outputLayerSize)
+                GenerateLayer(activationFunction, inputLayerSize, 0, out currentId), 
+                hiddenLayerSizes.Select(x => GenerateLayer(activationFunction, x, currentId, out currentId)).ToArray(), 
+                GenerateLayer(activationFunction, outputLayerSize, currentId, out currentId)
             );
         }
 
@@ -102,14 +104,16 @@ namespace AI.NeuralNetworks.FeedForward
         /// <param name="activationFunction"> The activation function that will be assigned to all neurons </param>
         /// <param name="size"> The size of the layer </param>
         /// <returns></returns>
-        private static ILayer GenerateLayer(IActivationFunction activationFunction, in uint size)
+        private static ILayer GenerateLayer(IActivationFunction activationFunction, in uint size, in int startId, out int endId)
         {
             var neurons = new INeuron[size];
 
             for(int i = 0; i < size; i++)
             {
-                neurons[i] = new Neuron(random.Generate(), activationFunction);
+                neurons[i] = new Neuron(startId + i, random.Generate(), activationFunction);
             }
+
+            endId = startId + (int)size;
 
             return new Layer(neurons);
         }

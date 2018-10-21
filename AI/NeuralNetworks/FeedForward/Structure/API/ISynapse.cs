@@ -13,12 +13,12 @@
         /// <summary>
         /// The start of this synapse
         /// </summary>
-        INeuron Sender { get; }
+        int SenderId { get; }
 
         /// <summary>
         /// The end of this synapse
         /// </summary>
-        INeuron Receiver { get; }
+        int ReceiverId { get; }
 
         /// <summary>
         /// Deep clones this synapse

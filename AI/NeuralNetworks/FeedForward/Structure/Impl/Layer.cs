@@ -1,15 +1,18 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
     /// A feed forward layer
     /// </summary>
+    [System.Serializable]
     public class Layer : ILayer
     {
-        public INeuron[] Neurons { get; }
+        public IList<INeuron> Neurons { get; }
 
-        public int Size { get; }
+        public int Size => Neurons.Count;
 
         /// <summary>
         /// Simple c'tor
@@ -17,7 +20,6 @@ namespace AI.NeuralNetworks.FeedForward
         public Layer(params INeuron[] neurons)
         {
             this.Neurons = neurons;
-            Size = neurons.Length;
         }
 
         public INeuron this[int index]
@@ -25,10 +27,10 @@ namespace AI.NeuralNetworks.FeedForward
             get { return Neurons[index]; }
         }
 
-        public void Calculate()
+        public void Calculate(INetwork network)
         {
             //Calculates the values of this layers neurons
-            Neurons.AsParallel().ForAll(x => x.Calculate());
+            Neurons.AsParallel().ForAll(x => x.Calculate(network));
         }
 
         public ILayer Clone()

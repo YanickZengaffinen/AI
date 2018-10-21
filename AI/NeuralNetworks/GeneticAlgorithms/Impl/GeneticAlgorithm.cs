@@ -13,7 +13,7 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
 
         public ISpecies[] Population => members.ToArray();
 
-        private LinkedList<ISpecies> members;
+        private LinkedList<ISpecies> members = new LinkedList<ISpecies>();
         
         /// <summary>
         /// C'tor

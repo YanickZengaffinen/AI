@@ -1,4 +1,7 @@
-﻿namespace AI.NeuralNetworks.FeedForward
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
     /// Interface representing a layer of neurons in a neural network
@@ -8,7 +11,7 @@
         /// <summary>
         /// Get all neurons of this layer
         /// </summary>
-        INeuron[] Neurons { get; }
+        IList<INeuron> Neurons { get; } //using IList because we might want to mutate this layer
 
         /// <summary>
         /// Add an indexer to this layer to get a neuron by its index
@@ -25,7 +28,8 @@
         /// <summary>
         /// Calculates this layer of neurons
         /// </summary>
-        void Calculate();
+        /// <param name="network">The holder of this layer</param>
+        void Calculate(INetwork network);
 
         /// <summary>
         /// Deep clones this layer

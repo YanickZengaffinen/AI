@@ -8,6 +8,11 @@ namespace AI.NeuralNetworks.FeedForward
     public interface INeuron
     {
         /// <summary>
+        /// The id of this neuron
+        /// </summary>
+        int Id { get; }
+
+        /// <summary>
         /// The last value this neuron had
         /// </summary>
         double Value { get; set; }
@@ -35,7 +40,8 @@ namespace AI.NeuralNetworks.FeedForward
         /// <summary>
         /// Calculates the value of this neuron
         /// </summary>
-        void Calculate();
+        /// <param name="network">The network that holds this neuron</param>
+        void Calculate(INetwork network);
 
         /// <summary>
         /// Deep clones this neuron
