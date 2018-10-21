@@ -20,5 +20,10 @@
 
             this.Weight = weight;
         }
+
+        public ISynapse Clone()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

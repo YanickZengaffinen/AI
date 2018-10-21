@@ -43,5 +43,15 @@ namespace AI.NeuralNetworks.FeedForward
                 IncomingSynapses.Sum(x => x.Weight * x.Sender.Value)
             );
         }
+
+        public INeuron Clone()
+        {
+            return new Neuron(
+                Bias, 
+                IncomingSynapses.Select(x => x.Clone()).ToArray(), 
+                OutgoingSynapses.Select(x => x.Clone()).ToArray(), 
+                ActivationFunction
+            );
+        }
     }
 }

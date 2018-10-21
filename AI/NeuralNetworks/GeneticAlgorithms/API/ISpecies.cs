@@ -15,7 +15,7 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         /// Calculates how good this instance should be ranked in the genetic algorithm
         /// </summary>
         /// <returns> A value representing the rank of this instance. Higher values = better ranking </returns>
-        double Rank();
+        void CalculateScore();
 
         /// <summary>
         /// Mutates this instance to generate offspring with the same traits

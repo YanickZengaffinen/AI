@@ -37,7 +37,7 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         {
             foreach(var ranker in members)
             {
-                ranker.Rank();
+                ranker.CalculateScore();
             }
 
             BreedFittest(KillLeastFit());
@@ -49,7 +49,12 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         /// <returns>The enumeration of members that have survived</returns>
         protected virtual IEnumerable<ISpecies> KillLeastFit()
         {
-            return members.ToList().OrderBy(x => x.Rank()).Take(SurvivingMembers);
+            foreach(var member in members)
+            {
+                member.CalculateScore();
+            }
+
+            return members.ToList().OrderBy(x => x.Score).Take(SurvivingMembers);
         }
 
         /// <summary>

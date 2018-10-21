@@ -26,5 +26,10 @@
         /// Calculates this layer of neurons
         /// </summary>
         void Calculate();
+
+        /// <summary>
+        /// Deep clones this layer
+        /// </summary>
+        ILayer Clone();
     }
 }

@@ -37,5 +37,9 @@ namespace AI.NeuralNetworks.FeedForward
         /// </summary>
         void Calculate();
 
+        /// <summary>
+        /// Deep clones this neuron
+        /// </summary>
+        INeuron Clone();
     }
 }

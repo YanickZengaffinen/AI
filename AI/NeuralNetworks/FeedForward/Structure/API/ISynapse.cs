@@ -19,5 +19,10 @@
         /// The end of this synapse
         /// </summary>
         INeuron Receiver { get; }
+
+        /// <summary>
+        /// Deep clones this synapse
+        /// </summary>
+        ISynapse Clone();
     }
 }

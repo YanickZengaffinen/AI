@@ -30,5 +30,10 @@ namespace AI.NeuralNetworks.FeedForward
             //Calculates the values of this layers neurons
             Neurons.AsParallel().ForAll(x => x.Calculate());
         }
+
+        public ILayer Clone()
+        {
+            return new Layer(Neurons.Select(x => x.Clone()).ToArray());
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace AI.NeuralNetworks.FeedForward
+﻿using System.Linq;
+
+namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
     /// Fully connected feed forward neural network
@@ -32,6 +34,11 @@
 
             //calculate the output layer
             OutputLayer.Calculate();
+        }
+
+        public INetwork Clone()
+        {
+            return new Network(InputLayer.Clone(), HiddenLayers.Select(x => x.Clone()).ToArray(), OutputLayer.Clone());
         }
     }
 }
