@@ -1,6 +1,6 @@
 ﻿using AI.StateMachine;
-using AI.StateMachine.Impl;
-using AI_Test.Tests;
+using AI_Test.NeuralNetworks.Tests;
+using AI_Test.StateMachine.Tests;
 using Autofac;
 using System;
 
@@ -14,7 +14,8 @@ namespace AI_Test
         {
             SetupDependencyInjection();
 
-            new TransitionTest("Transition Test").Run();
+            //new TransitionTest("Transition Test").Run();
+            new FeedForwardNeuralNetworkTester("Feed forward neural network tester").Run();
 
             //ask the user for permission to finish the program...
             Console.WriteLine("Press Enter to exit window");
@@ -33,7 +34,7 @@ namespace AI_Test
             //subscribe for StateMachine
             builder.RegisterType<State>().As<IState>();
             builder.RegisterType<Transition>().As<ITransition>();
-            builder.RegisterType<StateMachine>().As<IStateMachine>();
+            builder.RegisterType<AI.StateMachine.StateMachine>().As<IStateMachine>();
 
             DIScope = builder.Build();
         }
