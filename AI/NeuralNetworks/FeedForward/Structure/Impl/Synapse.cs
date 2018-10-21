@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.NeuralNetworks.FeedForward
+﻿namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
     /// A feed forward synapse

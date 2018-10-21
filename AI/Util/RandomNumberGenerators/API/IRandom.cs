@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.RandomNumberGenerators
+﻿namespace AI.Util.RandomNumberGenerators
 {
     /// <summary>
     /// Generates a random number

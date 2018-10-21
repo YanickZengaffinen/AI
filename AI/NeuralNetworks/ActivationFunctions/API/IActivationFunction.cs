@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.NeuralNetworks.ActivationFunctions
+﻿namespace AI.NeuralNetworks.ActivationFunctions
 {
     /// <summary>
     /// A mathematical function

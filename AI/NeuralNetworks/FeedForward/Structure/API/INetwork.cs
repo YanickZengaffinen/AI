@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.NeuralNetworks.FeedForward
+﻿namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
-    /// Interface representing a neural net
+    /// Interface representing a neural network
     /// </summary>
     public interface INetwork
     {

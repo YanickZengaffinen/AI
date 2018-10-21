@@ -1,10 +1,7 @@
 ﻿using AI.NeuralNetworks.ActivationFunctions;
-using AI.RandomNumberGenerators;
-using AI.RandomNumberGenerators.Impl;
+using AI.Util.RandomNumberGenerators;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AI.NeuralNetworks.FeedForward
 {

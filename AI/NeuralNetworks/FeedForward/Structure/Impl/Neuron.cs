@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AI.NeuralNetworks.ActivationFunctions;
+﻿using AI.NeuralNetworks.ActivationFunctions;
 using System.Linq;
-using AI.Util;
 
 namespace AI.NeuralNetworks.FeedForward
 {

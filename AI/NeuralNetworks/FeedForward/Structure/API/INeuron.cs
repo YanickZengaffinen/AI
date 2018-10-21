@@ -1,12 +1,9 @@
 ﻿using AI.NeuralNetworks.ActivationFunctions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
-    /// Interface representing a neuron in a neural net
+    /// Interface representing a neuron in a neural network
     /// </summary>
     public interface INeuron
     {

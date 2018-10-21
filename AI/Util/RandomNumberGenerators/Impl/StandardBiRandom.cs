@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AI.RandomNumberGenerators.Impl
+namespace AI.Util.RandomNumberGenerators
 {
     /// <summary>
     /// Generates a random number ranging from -1 to +1

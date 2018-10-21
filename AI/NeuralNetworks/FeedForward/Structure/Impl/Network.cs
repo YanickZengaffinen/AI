@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AI.Util;
-
-namespace AI.NeuralNetworks.FeedForward
+﻿namespace AI.NeuralNetworks.FeedForward
 {
     /// <summary>
     /// Fully connected feed forward neural network

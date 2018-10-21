@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.NeuralNetworks.FeedForward
+﻿namespace AI.NeuralNetworks.FeedForward
 {
+    /// <summary>
+    /// Interface for a connection between two neurons
+    /// </summary>
     public interface ISynapse
     {
         /// <summary>
