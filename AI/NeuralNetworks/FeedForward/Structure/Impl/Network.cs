@@ -14,6 +14,7 @@ namespace AI.NeuralNetworks.FeedForward
         public ILayer OutputLayer { get; }
 
         public IList<INeuron> Neurons { get; }
+        public IList<ISynapse> Synapses { get; }
 
         public Network(ILayer inputLayer, ILayer[] hiddenLayers, ILayer outputLayer)
         {
@@ -22,6 +23,16 @@ namespace AI.NeuralNetworks.FeedForward
             this.OutputLayer = outputLayer;
 
             this.Neurons = InputLayer.Neurons.Concat(OutputLayer.Neurons).Concat(HiddenLayers.SelectMany(x => x.Neurons)).ToList();
+
+            this.Synapses = InputLayer.Neurons.SelectMany(x => x.OutgoingSynapses).ToList();
+
+            foreach (var hiddenLayer in HiddenLayers)
+            {
+                this.Synapses.Concat(hiddenLayer.Neurons.SelectMany(x => x.OutgoingSynapses));
+            }
+
+            //Synapses won't be added twice since we only collect outgoing synapses
+            //this.Synapses = this.Synapses.Distinct().ToList();
         }
 
         public INeuron this[int index]

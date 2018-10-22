@@ -1,16 +1,17 @@
 ﻿using AI.NeuralNetworks.ActivationFunctions;
+using AI.NeuralNetworks.FeedForward;
 using AI.Util.RandomNumberGenerators;
 using System;
 using System.Linq;
 
-namespace AI.NeuralNetworks.FeedForward
+namespace AI.NeuralNetworks
 {
     /// <summary>
-    /// Class that generates different types of networks
+    /// Partial class that generates different types of networks
     /// </summary>
-    public class NetworkGenerator
+    public static partial class NetworkGenerator
     {
-        private static IRandom random = new StandardBiRandom();
+        private static IRandom random = new StandardRandom();
 
         /// <summary>
         /// Generates a neural net where the layers are fully connected and there are no recurrent connections.
@@ -65,7 +66,7 @@ namespace AI.NeuralNetworks.FeedForward
             for(int i = 0; i < layerA.Size; i++)
             {
                 var neuron = layerA[i];
-                neuron.OutgoingSynapses = layerB.Neurons.Select(x => new Synapse(neuron.Id, x.Id, random.Generate())).ToArray();
+                neuron.OutgoingSynapses = layerB.Neurons.Select(x => new Synapse(neuron.Id, x.Id, random.GenerateBi())).ToArray();
             }
 
             for(int i = 0; i < layerB.Size; i++)
@@ -110,7 +111,7 @@ namespace AI.NeuralNetworks.FeedForward
 
             for(int i = 0; i < size; i++)
             {
-                neurons[i] = new Neuron(startId + i, random.Generate(), activationFunction);
+                neurons[i] = new Neuron(startId + i, random.GenerateBi(), activationFunction);
             }
 
             endId = startId + (int)size;

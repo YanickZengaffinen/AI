@@ -28,6 +28,11 @@ namespace AI.NeuralNetworks.FeedForward
         IList<INeuron> Neurons { get; } //TODO: test performance of IList vs LinkedList
 
         /// <summary>
+        /// A list of all the synapses of the layer
+        /// </summary>
+        IList<ISynapse> Synapses { get; }
+
+        /// <summary>
         /// Indexer for this network
         /// </summary>
         /// <param name="id">The id of the neuron to look for</param>
