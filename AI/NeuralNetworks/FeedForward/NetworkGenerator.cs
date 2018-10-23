@@ -14,12 +14,9 @@ namespace AI.NeuralNetworks
         private static IRandom random = new StandardRandom();
 
         /// <summary>
-        /// Generates a neural net where the layers are fully connected and there are no recurrent connections.
+        /// Generates a deep neural network where the layers are fully connected and there are no recurrent connections.
         /// </summary>
-        /// <param name="activationFunction"> The activation function that will be assigned to all neurons </param>
-        /// <param name="inputLayerSize"> The size of the input layer </param>
-        /// <param name="outputLayerSize"> The size of the output layer </param>
-        /// <param name="hiddenLayerSizes"> The sizes of the hidden layers </param>
+        /// <param name="activationFunction"> Will be assigned to all neurons </param>
         public static INetwork GenerateFullyConnectedFeedForwardNetwork(IActivationFunction activationFunction, 
             in uint inputLayerSize, in uint outputLayerSize, params uint[] hiddenLayerSizes)
         {
@@ -45,9 +42,7 @@ namespace AI.NeuralNetworks
         /// <summary>
         /// Generates a neural network where the layers are fully connected and there are no recurrent connections
         /// </summary>
-        /// <param name="activationFunction"> The activation function that will be assigned to all neurons </param>
-        /// <param name="inputLayerSize"> The size of the input layer </param>
-        /// <param name="outputLayerSize"> The size of the output layer </param>
+        /// <param name="activationFunction"> Will be assigned to all neurons </param>
         public static INetwork GenerateFullyConnectedFeedForwardNetwork(IActivationFunction activationFunction,
             in uint inputLayerSize, in uint outputlayerSize)
         {
@@ -80,11 +75,7 @@ namespace AI.NeuralNetworks
         /// <summary>
         /// Helper method that simply generates the neurons of a neural network
         /// </summary>
-        /// <param name="random"> An instance of random </param>
-        /// <param name="activationFunction"> The activation function that will be assigned to all neurons </param>
-        /// <param name="inputLayerSize"> The size of the input layer </param>
-        /// <param name="outputLayerSize"> The size of the output layer </param>
-        /// <param name="hiddenLayerSizes"> The sizes of the hidden layers </param>
+        /// <param name="activationFunction"> Will be assigned to all neurons </param>
         /// <returns> A network with non-connected neurons </returns>
         private static INetwork GenerateLayers(IActivationFunction activationFunction, 
             in uint inputLayerSize, in uint outputLayerSize, params uint[] hiddenLayerSizes)
@@ -101,9 +92,7 @@ namespace AI.NeuralNetworks
         /// <summary>
         /// Generates a layer of neurons without setting any connections
         /// </summary>
-        /// <param name="random"> An instance of random </param>
-        /// <param name="activationFunction"> The activation function that will be assigned to all neurons </param>
-        /// <param name="size"> The size of the layer </param>
+        /// <param name="activationFunction"> Will be assigned to all neurons </param>
         /// <returns></returns>
         private static ILayer GenerateLayer(IActivationFunction activationFunction, in uint size, in int startId, out int endId)
         {

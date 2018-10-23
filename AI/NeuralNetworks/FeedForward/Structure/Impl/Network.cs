@@ -35,11 +35,6 @@ namespace AI.NeuralNetworks.FeedForward
             //this.Synapses = this.Synapses.Distinct().ToList();
         }
 
-        public INeuron this[int index]
-        {
-            get { return Neurons.First(x => x.Id == index); }
-        }
-
         public void Calculate(double[] inputValues)
         {
             //set all the values of the input layer
@@ -62,5 +57,8 @@ namespace AI.NeuralNetworks.FeedForward
         {
             return new Network(InputLayer.Clone(), HiddenLayers.Select(x => x.Clone()).ToArray(), OutputLayer.Clone());
         }
+
+
+        public INeuron GetNeuronById(int id) => Neurons.First(x => x.Id == id);
     }
 }

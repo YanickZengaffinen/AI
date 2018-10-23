@@ -33,13 +33,6 @@ namespace AI.NeuralNetworks.FeedForward
         IList<ISynapse> Synapses { get; }
 
         /// <summary>
-        /// Indexer for this network
-        /// </summary>
-        /// <param name="id">The id of the neuron to look for</param>
-        /// <returns>The neuron with the given id</returns>
-        INeuron this[int id] { get; }
-
-        /// <summary>
         /// Calculates the entire network from the given array of input values
         /// </summary>
         /// <param name="inputValues"> 
@@ -52,5 +45,11 @@ namespace AI.NeuralNetworks.FeedForward
         /// Deep clones this network
         /// </summary>
         INetwork Clone();
+
+        /// <summary>
+        /// Gets a neuron by its id
+        /// </summary>
+        INeuron GetNeuronById(int id); //cannot use indexer because index and id could be mixed up
+
     }
 }

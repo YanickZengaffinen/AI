@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AI.NeuralNetworks.GeneticAlgorithms
+﻿namespace AI.NeuralNetworks.GeneticAlgorithms
 {
     /// <summary>
     /// Immutable class that holds chances and deviations for any mutations on neural networks

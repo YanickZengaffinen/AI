@@ -45,7 +45,7 @@ namespace AI.NeuralNetworks.FeedForward
         {
             Value = ActivationFunction.Calculate(
                 Bias + 
-                IncomingSynapses.Sum(x => x.Weight * network[x.SenderId].Value)
+                IncomingSynapses.Sum(x => x.Weight * network.GetNeuronById(x.SenderId).Value)
             );
         }
 

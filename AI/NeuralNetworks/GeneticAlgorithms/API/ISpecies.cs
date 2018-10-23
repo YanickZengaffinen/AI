@@ -20,7 +20,6 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         /// <summary>
         /// Mutates this instance to generate offspring with the same traits
         /// </summary>
-        /// <returns> A mutation of this instance </returns>
         ISpecies Mutate();
     }
 }

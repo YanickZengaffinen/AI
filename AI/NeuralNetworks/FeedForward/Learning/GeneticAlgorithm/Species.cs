@@ -21,9 +21,8 @@ namespace AI.NeuralNetworks.FeedForward.Learning
         /// <summary>
         /// C'tor
         /// </summary>
-        /// <param name="network">The network that is used to calculate the rank of this species</param>
         /// <param name="reEvaluate">Should this species' rank be evaluated every epoch</param>
-        /// <param name="rankingFunc">A function to allow the use of external logic to calculate the score</param>
+        /// <param name="rankingFunc">A function to allow the use of external logic to calculate the score (= the return value)</param>
         public Species(INetwork network, in MutationParameters mutationParams, Func<Species, double> rankingFunc, bool reEvaluate = true)
         {
             this.Network = network;
