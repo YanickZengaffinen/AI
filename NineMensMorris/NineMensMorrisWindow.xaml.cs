@@ -25,12 +25,14 @@ namespace NineMensMorris
     public partial class NineMensMorrisWindow : Window
     {
         //which player should have which color
-        private Dictionary<int, SolidColorBrush> colorMap = new Dictionary<int, SolidColorBrush>()
+        private Dictionary<int, SolidColorBrush> colorBrushMap = new Dictionary<int, SolidColorBrush>()
         {
             { Game.HostId, new SolidColorBrush(Color.FromRgb(255, 255, 255))},
             { Game.PlayerAId, new SolidColorBrush(Color.FromRgb(255, 0, 0))},
             { Game.PlayerBId, new SolidColorBrush(Color.FromRgb(0, 0, 255))}
         };
+
+        private SolidColorBrush selectedColorBrush = new SolidColorBrush(Color.FromRgb(255, 255, 0));
 
         private Button[] allPoints;
 
@@ -112,7 +114,7 @@ namespace NineMensMorris
             //Set the color of all buttons to neutral
             foreach (var button in allPoints)
             {
-                button.Background = colorMap[Game.HostId];
+                button.Background = colorBrushMap[Game.HostId];
             }
         }
 
@@ -132,6 +134,10 @@ namespace NineMensMorris
 
             boardPointClicked += (object s, Tuple<int, Position> args) => rVal.ClickPoint(args.Item1, args.Item2);
 
+            //UI
+            rVal.onManSelected += (object s, Position position) => GetButton(position).Background = selectedColorBrush; //highlight the button
+            rVal.onManDeselected += (object s, Position position) => GetButton(position).Background = colorBrushMap[game.Board.GetPoint(position).OwnerId]; //reset the button to its normal value
+
             return rVal;
         }
 
@@ -140,7 +146,7 @@ namespace NineMensMorris
         {
             var button = GetButton(placement.Target);
 
-            button.Background = colorMap[placement.Player.ID];
+            button.Background = colorBrushMap[placement.Player.ID];
         }
 
         //Whenever a man has been moved
@@ -149,8 +155,8 @@ namespace NineMensMorris
             var buttonFrom = GetButton(move.Start);
             var buttonTo = GetButton(move.Destination);
 
-            buttonFrom.Background = colorMap[Game.HostId];
-            buttonTo.Background = colorMap[move.Player.ID];
+            buttonFrom.Background = colorBrushMap[Game.HostId];
+            buttonTo.Background = colorBrushMap[move.Player.ID];
         }
 
         //Whenever a man has been killed
@@ -158,7 +164,7 @@ namespace NineMensMorris
         {
             var button = GetButton(kill.Target);
 
-            button.Background = colorMap[Game.HostId];
+            button.Background = colorBrushMap[Game.HostId];
         }
 
         //Whenever the game has been finished

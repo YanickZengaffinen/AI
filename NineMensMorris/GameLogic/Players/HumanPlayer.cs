@@ -21,6 +21,9 @@ namespace NineMensMorris.GameLogic
         private bool manSelected = false;
         private Position lastClickPosition;
 
+        public event EventHandler<Position> onManSelected;
+        public event EventHandler<Position> onManDeselected;
+
         public void Init(Game game, int id)
         {
             this.game = game;
@@ -64,21 +67,22 @@ namespace NineMensMorris.GameLogic
                         break;
                     case Phase.Moving:
                     case Phase.Flying:
-                        if (manSelected)
+                        if (manSelected && game.GetOwnerId(position) != ID) //check if there is already a man selected and the newly selected man isn't one of our own
                         {
-                            if (lastClickPosition.Equals(position)) //if the player clicks on the same position twice
-                            {
-                                manSelected = false; //deselect the man
-                            }
-                            else
-                            {
-                                game.Move(new Move(this, lastClickPosition, position)); //move a man
-                            }
+                            game.Move(new Move(this, lastClickPosition, position)); //move a man
                         }
                         else if(game.GetOwnerId(position) == this.ID) //make sure the first clicked man is one of ours
                         {
+                            if (manSelected != false)
+                            {
+                                onManDeselected?.Invoke(this, lastClickPosition);
+                            }
+
                             lastClickPosition = position;
                             manSelected = true;
+
+                            //onManSelected event
+                            onManSelected?.Invoke(this, lastClickPosition);
                         }
                         break;
                     default:
