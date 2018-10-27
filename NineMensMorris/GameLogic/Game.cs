@@ -18,6 +18,11 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         public const int PlayerAId = -1, PlayerBId = 1;
 
+        /// <summary>
+        /// Representing the structure of a nine men's morris board
+        /// </summary>
+        public Board Board { get; private set; }
+
         private const int menBudget = 9; //How many men can the players each place
         private const int startFlying = 3; //When should the player be allowed to fly his men?
         private const int gameLost = 2; //At how many men is the player considered dead
@@ -30,7 +35,6 @@ namespace NineMensMorris.GameLogic
 
         private int killsPending = 0; //How many kills are there pending for the current active player
 
-        private Board board; //Representing the structure of a nine men's morris board
 
         //Events
         /// <summary>
@@ -55,7 +59,7 @@ namespace NineMensMorris.GameLogic
 
         public Game(IPlayer playerA, IPlayer playerB)
         {
-            board = new Board(HostId);
+            Board = new Board(HostId);
 
             this.players.Add(PlayerAId, new PlayerGameStatus(playerA));
             this.players.Add(PlayerBId, new PlayerGameStatus(playerB));
@@ -79,9 +83,9 @@ namespace NineMensMorris.GameLogic
 
             if(player == activePlayer && CheckPhase(player) == Phase.Placing) //check rights
             {
-                if(board[position] == HostId) //check if empty
+                if(Board[position] == HostId) //check if empty
                 {
-                    board[position] = player.ID;
+                    Board[position] = player.ID;
 
                     players[player.ID].PlaceMan();
 
@@ -111,12 +115,12 @@ namespace NineMensMorris.GameLogic
             if(player == activePlayer)
             {
                 //check if the move is valid
-                if (board[from] == player.ID && //does the field belong to the player
-                    board[to] == HostId && //check if the target field is empty
-                    ((CheckPhase(player) == Phase.Moving && board.AreAdjacent(from, to)) || CheckPhase(player) == Phase.Flying)) //could the player possibly move from this position to the target
+                if (Board[from] == player.ID && //does the field belong to the player
+                    Board[to] == HostId && //check if the target field is empty
+                    ((CheckPhase(player) == Phase.Moving && Board.AreAdjacent(from, to)) || CheckPhase(player) == Phase.Flying)) //could the player possibly move from this position to the target
                 {
-                    board[from] = HostId;
-                    board[to] = player.ID;
+                    Board[from] = HostId;
+                    Board[to] = player.ID;
 
                     //invoke event
                     onMoved?.Invoke(this, move);
@@ -138,7 +142,7 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         private bool CheckForMill(IPlayer player, Position position)
         {
-            killsPending = board.GetPoint(position).GetCompleteLineCount(player.ID);
+            killsPending = Board.GetPoint(position).GetCompleteLineCount(player.ID);
 
             return HasKillPending(player);
         }
@@ -153,19 +157,19 @@ namespace NineMensMorris.GameLogic
 
             if(player == activePlayer)
             {
-                if(board[position] == inactivePlayer.ID) //check if the target point belongs to the enemy
+                if(Board[position] == inactivePlayer.ID) //check if the target point belongs to the enemy
                 {
                     //check if the man that should be killed isn't part of a mill
-                    if(board.GetPoint(position).GetCompleteLineCount(board[position]) > 0) //the man is part of a mill
+                    if(Board.GetPoint(position).GetCompleteLineCount(Board[position]) > 0) //the man is part of a mill
                     {
-                        var freePoints = board.GetFreePoints(inactivePlayer.ID);
-                        if (freePoints.Count != 0 && !freePoints.Contains(board.GetPoint(position))) //if there are points that are not in a mill but the selected one isn't one of them
+                        var freePoints = Board.GetFreePoints(inactivePlayer.ID);
+                        if (freePoints.Count != 0 && !freePoints.Contains(Board.GetPoint(position))) //if there are points that are not in a mill but the selected one isn't one of them
                         {
                             return false; //the man cannot be killed
                         }
                     }
 
-                    board[position] = HostId;
+                    Board[position] = HostId;
 
                     players[inactivePlayer.ID].KillMan();
 
@@ -259,7 +263,7 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         public int GetOwnerId(Position position)
         {
-            return board[position];
+            return Board[position];
         }
 
         /// <summary>
@@ -267,7 +271,7 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         public Point[] GetPoints()
         {
-            return board.AllPoints;
+            return Board.AllPoints;
         }
     }
 }

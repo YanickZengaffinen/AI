@@ -73,11 +73,31 @@ namespace NineMensMorris
             //clear the eventhandler
             boardPointClicked = null;
 
-            var placerNetwork = new PlacerNN(NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
-                new SigmoidFunction(), (uint)allPoints.Length, (uint)allPoints.Length, 10)); //TODO: enable to load saved networks
-            var ai = new AIPlayer(placerNetwork);
+            var ai = new AIPlayer();
 
             CreateDisplayedNewGame(CreateHumanPlayer(), ai);
+
+            //TODO: enable to load saved networks
+            //setup the controllers for the AI
+            var placementCtrl = new PlacementController(NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, (uint)allPoints.Length, (uint)allPoints.Length, 10), 
+                ai); 
+
+            var allMovesAdjacent = game.Board.GetAllMovesAdjacents(ai);
+            var moveCtrl = new MoveController(NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, (uint)allPoints.Length, (uint)allMovesAdjacent.Length, 100, 100), 
+                ai, allMovesAdjacent);
+
+            var killCtrl = new KillController(NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, (uint)allPoints.Length, (uint)allPoints.Length, 100, 100),
+                ai);
+
+            var allMoves = game.Board.GetAllMoves(ai);
+            var flyingCtrl = new FlyingController(NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, (uint)allPoints.Length, (uint)allMoves.Length, 100, 100),
+                ai, allMoves);
+
+            ai.Init(placementCtrl, moveCtrl, killCtrl, flyingCtrl);
         }
 
         //Creates a displayed game

@@ -21,7 +21,7 @@ namespace NineMensMorris.GameLogic
         /// <summary>
         /// C'tor
         /// </summary>
-        public Placement(IPlayer player, Position target) : this()
+        public Placement(IPlayer player, Position target)
         {
             Player = player;
             Target = target;

@@ -7,6 +7,12 @@ namespace AI.NeuralNetworks.ActivationFunctions
     /// </summary>
     public class SigmoidFunction : IActivationFunction
     {
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        private static readonly Lazy<SigmoidFunction> lazyInstance = new Lazy<SigmoidFunction>(() => new SigmoidFunction());
+        public static SigmoidFunction Instance => lazyInstance.Value;
+
         public double Calculate(in double value)
         {
             return 1 / (1 + Math.Pow(Math.E, -value));

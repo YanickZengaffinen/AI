@@ -159,19 +159,36 @@ namespace NineMensMorris.GameLogic
         }
 
         /// <summary>
-        /// Gets a point for a position
-        /// </summary>
-        public Point GetPoint(Position position)
-        {
-            return AllPoints.First(x => x.Position.Equals(position));
-        }
-
-        /// <summary>
         /// Get all points that are currently not part of any line/mill
         /// </summary>
         public IList<Point> GetFreePoints(int ownerId)
         {
             return AllPoints.Where(x => x.OwnerId == ownerId && !x.HasCompleteLine(ownerId)).ToList();
+        }
+
+        /// <summary>
+        /// Gets all the moves that are possible during the movement phase
+        /// </summary>
+        public Move[] GetAllMovesAdjacents(IPlayer player)
+        {
+            //go through each point and add a path to all of its adjacents
+            return AllPoints.SelectMany(x => x.Adjacents.Select(y => new Move(player, x.Position, y.Position))).ToArray();
+        }
+
+        /// <summary>
+        /// Gets all the moves that are possible during the flying phase
+        /// </summary>
+        public Move[] GetAllMoves(IPlayer player)
+        {
+            return AllPoints.SelectMany(x => AllPoints.Select(y => new Move(player, x.Position, y.Position))).ToArray();
+        }
+
+        /// <summary>
+        /// Gets a point for a position
+        /// </summary>
+        public Point GetPoint(Position position)
+        {
+            return AllPoints.First(x => x.Position.Equals(position));
         }
     }
 }

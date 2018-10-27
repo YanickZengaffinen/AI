@@ -1,4 +1,5 @@
 ﻿using NineMensMorris.GameLogic.Players.AI;
+using NineMensMorris.GameLogic.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,17 @@ namespace NineMensMorris.GameLogic
 
         private Game game;
 
-        private PlacerNN placerNetwork;
+        private PlacementController placerNetwork;
+        private MoveController moveController;
+        private KillController killController;
+        private FlyingController flyingController;
 
-        public AIPlayer(PlacerNN placerNetwork)
+        public void Init(PlacementController placerNetwork, MoveController moveController, KillController killController, FlyingController flyingController)
         {
             this.placerNetwork = placerNetwork;
+            this.moveController = moveController;
+            this.killController = killController;
+            this.flyingController = flyingController;
         }
 
         public void Init(Game game, int id)
@@ -31,8 +38,28 @@ namespace NineMensMorris.GameLogic
             switch(game.CheckPhase(this))
             {
                 case Phase.Placing:
-                    Place(game);
+                    TryActions(game, 
+                        placerNetwork.GetRankedActions(game.GetPoints()), 
+                        (RatedObject<Placement> ratedPlacement) => game.Place(ratedPlacement.Object));
                     break;
+                case Phase.Moving:
+                    TryActions(game, 
+                        moveController.GetRankedActions(game.GetPoints()),
+                        (RatedObject<Move> move) => game.Move(move.Object));
+                    break;
+                case Phase.Flying:
+                    TryActions(game,
+                        flyingController.GetRankedActions(game.GetPoints()),
+                        (RatedObject<Move> move) => game.Move(move.Object));
+                    break;
+            }
+
+            //check if there are any kills pending for this player
+            while(game.HasKillPending(this))
+            {
+                TryActions(game,
+                    killController.GetRankedActions(game.GetPoints()),
+                    (RatedObject<Kill> kill) => game.Kill(kill.Object));
             }
         }
 
@@ -41,11 +68,26 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         private void Place(Game game)
         {
-            var rankedPoints = placerNetwork.GetRankedPoints(game.GetPoints());
+            var rankedPoints = placerNetwork.GetRankedActions(game.GetPoints());
 
             foreach(var rankedPoint in rankedPoints)
             {
-                if(game.Place(new Placement(this, rankedPoint.Item1.Position)))
+                if(game.Place(rankedPoint.Object))
+                {
+                    break;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Tries to execute different actions until one is finally successful and returns true
+        /// </summary>
+        private void TryActions<T>(Game game, IList<RatedObject<T>> objects, Func<RatedObject<T>, bool> func, int maxCount = int.MaxValue)
+        {
+            for(int i = 0; i < objects.Count && i < maxCount; i++)
+            {
+                if(func.Invoke(objects[i]))
                 {
                     break;
                 }
