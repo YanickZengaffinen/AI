@@ -14,11 +14,6 @@ namespace NineMensMorris.GameLogic
         int ID { get; }
 
         /// <summary>
-        /// Which phase of the game is this player currently in
-        /// </summary>
-        Phase Phase { get; }
-
-        /// <summary>
         /// Initially set the game this player participates on, the id he/she/it has 
         /// and other stuff
         /// </summary>

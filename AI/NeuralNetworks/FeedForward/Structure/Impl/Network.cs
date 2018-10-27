@@ -24,7 +24,7 @@ namespace AI.NeuralNetworks.FeedForward
 
             this.Neurons = InputLayer.Neurons.Concat(OutputLayer.Neurons).Concat(HiddenLayers.SelectMany(x => x.Neurons)).ToList();
 
-            this.Synapses = InputLayer.Neurons.SelectMany(x => x.OutgoingSynapses).ToList();
+            this.Synapses = InputLayer.Neurons.SelectMany(x => x.OutgoingSynapses ?? new ISynapse[0]).ToList();
 
             foreach (var hiddenLayer in HiddenLayers)
             {

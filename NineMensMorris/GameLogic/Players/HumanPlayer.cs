@@ -14,8 +14,6 @@ namespace NineMensMorris.GameLogic
     {
         public int ID { get; private set; }
 
-        public Phase Phase => game.CheckPhase(this);
-
         private Game game; //reference to the host game
 
         private bool isActive = false;
@@ -55,14 +53,14 @@ namespace NineMensMorris.GameLogic
 
             if(game.HasKillPending(this)) //the player has a pending kill
             {
-                game.Kill(this, position);
+                game.Kill(new Kill(this, position));
             }
             else
             {
-                switch (Phase)
+                switch (game.CheckPhase(this))
                 {
                     case Phase.Placing:
-                        game.Place(this, position); //place down a man
+                        game.Place(new Placement(this, position)); //place down a man
                         break;
                     case Phase.Moving:
                     case Phase.Flying:
@@ -74,7 +72,7 @@ namespace NineMensMorris.GameLogic
                             }
                             else
                             {
-                                game.Move(this, lastClickPosition, position); //move a man
+                                game.Move(new Move(this, lastClickPosition, position)); //move a man
                             }
                         }
                         else if(game.GetOwnerId(position) == this.ID) //make sure the first clicked man is one of ours

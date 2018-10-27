@@ -8,19 +8,19 @@ namespace NineMensMorris.GameLogic
 {
     public class Game
     {
-        private const int menBudget = 9; //How many men can the players each place
-        private const int startFlying = 3; //When should the player be allowed to fly his men?
-        private const int gameLost = 2; //At how many men is the player considered dead
-
         /// <summary>
         /// The id of points who do not belong to either one of the players
         /// </summary>
-        public const int HostId = -1;
+        public const int HostId = 0;
 
         /// <summary>
         /// The id of player x
         /// </summary>
-        public const int PlayerAId = 0, PlayerBId = 1;
+        public const int PlayerAId = -1, PlayerBId = 1;
+
+        private const int menBudget = 9; //How many men can the players each place
+        private const int startFlying = 3; //When should the player be allowed to fly his men?
+        private const int gameLost = 2; //At how many men is the player considered dead
 
         //Both the players... should be private so no one can get their identities (at least not through the game class)
         private Dictionary<int, PlayerGameStatus> players = new Dictionary<int, PlayerGameStatus>(2);
@@ -36,17 +36,17 @@ namespace NineMensMorris.GameLogic
         /// <summary>
         /// Raised whenever a player places a man
         /// </summary>
-        public event EventHandler<ManPlacedEventArgs> onPlaced;
+        public event EventHandler<Placement> onPlaced;
             
         /// <summary>
         /// Raised whenever a player moves a man
         /// </summary>
-        public event EventHandler<ManMovedEventArgs> onMoved;
+        public event EventHandler<Move> onMoved;
 
         /// <summary>
         /// Raised whenever a player kills a man
         /// </summary>
-        public event EventHandler<ManKilledEventArgs> onKilled;
+        public event EventHandler<Kill> onKilled;
 
         /// <summary>
         /// Raised whenever the game is finished... takes the status of the winner as a parameter
@@ -55,7 +55,7 @@ namespace NineMensMorris.GameLogic
 
         public Game(IPlayer playerA, IPlayer playerB)
         {
-            board = new Board();
+            board = new Board(HostId);
 
             this.players.Add(PlayerAId, new PlayerGameStatus(playerA));
             this.players.Add(PlayerBId, new PlayerGameStatus(playerB));
@@ -72,8 +72,11 @@ namespace NineMensMorris.GameLogic
         /// Try to place a men on a position for a player
         /// </summary>
         /// <returns> True if valid move </returns>
-        public bool Place(IPlayer player, Position position)
+        public bool Place(Placement placement)
         {
+            var player = placement.Player;
+            var position = placement.Target;
+
             if(player == activePlayer && CheckPhase(player) == Phase.Placing) //check rights
             {
                 if(board[position] == HostId) //check if empty
@@ -83,7 +86,7 @@ namespace NineMensMorris.GameLogic
                     players[player.ID].PlaceMan();
 
                     //invoke event
-                    onPlaced?.Invoke(this, new ManPlacedEventArgs(player, position));
+                    onPlaced?.Invoke(this, placement);
 
                     if(!CheckForMill(player, position)) //the placed man hasn't generated a new mill
                     {
@@ -99,8 +102,12 @@ namespace NineMensMorris.GameLogic
         /// Try to move a men from a position to 
         /// </summary>
         /// <returns> True if valid move </returns>
-        public bool Move(IPlayer player, Position from, Position to)
+        public bool Move(Move move)
         {
+            var player = move.Player;
+            var from = move.Start;
+            var to = move.Destination;
+
             if(player == activePlayer)
             {
                 //check if the move is valid
@@ -112,7 +119,7 @@ namespace NineMensMorris.GameLogic
                     board[to] = player.ID;
 
                     //invoke event
-                    onMoved?.Invoke(this, new ManMovedEventArgs(player, from, to));
+                    onMoved?.Invoke(this, move);
 
                     if (!CheckForMill(player, to)) //no mill generates due to this move
                     {
@@ -139,8 +146,11 @@ namespace NineMensMorris.GameLogic
         /// <summary>
         /// Try to kill a man at a certain position
         /// </summary>
-        public bool Kill(IPlayer player, Position position)
+        public bool Kill(Kill kill)
         {
+            var player = kill.Player;
+            var position = kill.Target;
+
             if(player == activePlayer)
             {
                 if(board[position] == inactivePlayer.ID) //check if the target point belongs to the enemy
@@ -160,7 +170,7 @@ namespace NineMensMorris.GameLogic
                     players[inactivePlayer.ID].KillMan();
 
                     //invoke event
-                    onKilled?.Invoke(this, new ManKilledEventArgs(player, position));
+                    onKilled?.Invoke(this, kill);
 
                     killsPending--;
 
@@ -250,6 +260,14 @@ namespace NineMensMorris.GameLogic
         public int GetOwnerId(Position position)
         {
             return board[position];
+        }
+
+        /// <summary>
+        /// Get all points of the board
+        /// </summary>
+        public Point[] GetPoints()
+        {
+            return board.AllPoints;
         }
     }
 }

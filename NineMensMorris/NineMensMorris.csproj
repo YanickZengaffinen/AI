@@ -57,7 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Page Include="NineMensMorrisWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -65,20 +65,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GameLogic\API\IAction.cs" />
     <Compile Include="GameLogic\CustomEventArgs\ManKilledEventArgs.cs" />
     <Compile Include="GameLogic\CustomEventArgs\ManMovedEventArgs.cs" />
     <Compile Include="GameLogic\CustomEventArgs\ManPlacedEventArgs.cs" />
     <Compile Include="GameLogic\Game.cs" />
+    <Compile Include="GameLogic\Impl\Kill.cs" />
+    <Compile Include="GameLogic\Impl\Move.cs" />
+    <Compile Include="GameLogic\Impl\Placement.cs" />
+    <Compile Include="GameLogic\Players\AI\AIPlayer.cs" />
+    <Compile Include="GameLogic\Players\AI\MoverNN.cs" />
+    <Compile Include="GameLogic\Players\AI\PlacerNN.cs" />
     <Compile Include="GameLogic\Structure\Board.cs" />
     <Compile Include="GameLogic\API\IPlayer.cs" />
     <Compile Include="GameLogic\API\Phase.cs" />
     <Compile Include="GameLogic\Structure\Position.cs" />
-    <Compile Include="GameLogic\Impl\HumanPlayer.cs" />
+    <Compile Include="GameLogic\Players\HumanPlayer.cs" />
     <Compile Include="GameLogic\Structure\Line.cs" />
     <Compile Include="GameLogic\PlayerGameStatus.cs" />
     <Compile Include="GameLogic\Structure\Point.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="NineMensMorrisWindow.xaml.cs">
+      <DependentUpon>NineMensMorrisWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -114,5 +121,6 @@
       <Name>AI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

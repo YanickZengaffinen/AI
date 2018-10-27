@@ -1,4 +1,7 @@
-﻿using NineMensMorris.GameLogic;
+﻿using AI.NeuralNetworks;
+using AI.NeuralNetworks.ActivationFunctions;
+using NineMensMorris.GameLogic;
+using NineMensMorris.GameLogic.Players.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +22,7 @@ namespace NineMensMorris
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class NineMensMorrisWindow : Window
     {
         //which player should have which color
         private Dictionary<int, SolidColorBrush> colorMap = new Dictionary<int, SolidColorBrush>()
@@ -37,7 +40,7 @@ namespace NineMensMorris
         //int represents the active player at the moment of the click
         private event EventHandler<Tuple<int, Position>> boardPointClicked;    
 
-        public MainWindow()
+        public NineMensMorrisWindow()
         {
             InitializeComponent();
 
@@ -58,22 +61,33 @@ namespace NineMensMorris
         //Game where both players are humans
         private void NewHumanVsHumanGame(object sender, RoutedEventArgs e)
         {
-            var humanA = new HumanPlayer();
-            var humanB = new HumanPlayer();
+            //clear the eventhandler
+            boardPointClicked = null;
 
-            game = new Game(humanA, humanB);
+            CreateDisplayedNewGame(CreateHumanPlayer(), CreateHumanPlayer());
+        }
+
+        //Game where a human plays against an AI
+        private void NewHumanVsAIGame(object sender, RoutedEventArgs e)
+        {
+            //clear the eventhandler
+            boardPointClicked = null;
+
+            var placerNetwork = new PlacerNN(NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                new SigmoidFunction(), (uint)allPoints.Length, (uint)allPoints.Length, 10)); //TODO: enable to load saved networks
+            var ai = new AIPlayer(placerNetwork);
+
+            CreateDisplayedNewGame(CreateHumanPlayer(), ai);
+        }
+
+        //Creates a displayed game
+        private void CreateDisplayedNewGame(IPlayer a, IPlayer b)
+        {
+            //create the game
+            game = new Game(a, b);
 
             //subscribe to game events
-            game.onPlaced += Game_OnPlaced;
-            game.onMoved += Game_OnMoved;
-            game.onKilled += Game_OnKilled;
-            game.onGameFinished += Game_Finished;
-
-            //subscribe to click events for players
-            boardPointClicked = null;
-            boardPointClicked += (object s, Tuple<int, Position> args) => humanA.ClickPoint(args.Item1, args.Item2);
-            boardPointClicked += (object s, Tuple<int, Position> args) => humanB.ClickPoint(args.Item1, args.Item2);
-
+            DisplayGame(game);
 
             //Set the color of all buttons to neutral
             foreach (var button in allPoints)
@@ -82,30 +96,49 @@ namespace NineMensMorris
             }
         }
 
-        //Whenever a man has been placed
-        private void Game_OnPlaced(object sender, ManPlacedEventArgs args)
+        //Subscribes to the game events in order for it to be rendered correctly
+        private void DisplayGame(Game game)
         {
-            var button = GetButton(args.Position);
+            game.onPlaced += Game_OnPlaced;
+            game.onMoved += Game_OnMoved;
+            game.onKilled += Game_OnKilled;
+            game.onGameFinished += Game_Finished;
+        }
 
-            button.Background = colorMap[args.Owner.ID];
+        //Creates a human player and subscribes to the click event
+        private HumanPlayer CreateHumanPlayer()
+        {
+            var rVal = new HumanPlayer();
+
+            boardPointClicked += (object s, Tuple<int, Position> args) => rVal.ClickPoint(args.Item1, args.Item2);
+
+            return rVal;
+        }
+
+        //Whenever a man has been placed
+        private void Game_OnPlaced(object sender, Placement placement)
+        {
+            var button = GetButton(placement.Target);
+
+            button.Background = colorMap[placement.Player.ID];
         }
 
         //Whenever a man has been moved
-        private void Game_OnMoved(object sender, ManMovedEventArgs args)
+        private void Game_OnMoved(object sender, Move move)
         {
-            var buttonFrom = GetButton(args.From);
-            var buttonTo = GetButton(args.To);
+            var buttonFrom = GetButton(move.Start);
+            var buttonTo = GetButton(move.Destination);
 
             buttonFrom.Background = colorMap[Game.HostId];
-            buttonTo.Background = colorMap[args.By.ID];
+            buttonTo.Background = colorMap[move.Player.ID];
         }
 
         //Whenever a man has been killed
-        private void Game_OnKilled(object sender, ManKilledEventArgs args)
+        private void Game_OnKilled(object sender, Kill kill)
         {
-            var button = GetButton(args.Target);
+            var button = GetButton(kill.Target);
 
-            button.Background = colorMap[Game.HostId];//new SolidColorBrush(Color.FromRgb(0, 255, 0));//
+            button.Background = colorMap[Game.HostId];
         }
 
         //Whenever the game has been finished
