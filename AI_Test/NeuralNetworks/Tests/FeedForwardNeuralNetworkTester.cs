@@ -1,9 +1,8 @@
-﻿using AI.NeuralNetworks.ActivationFunctions;
+﻿using AI.NeuralNetworks;
+using AI.NeuralNetworks.ActivationFunctions;
 using AI.NeuralNetworks.FeedForward;
 using AI_Test.API;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AI_Test.NeuralNetworks.Tests
 {
