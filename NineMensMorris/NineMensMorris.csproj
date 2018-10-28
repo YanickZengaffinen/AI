@@ -121,6 +121,10 @@
       <Project>{6A1AA4E4-57E0-4143-9118-18C9502207B8}</Project>
       <Name>AI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{63846d1e-9f7e-4cf5-9eb5-0019970ec4c5}</Project>
+      <Name>Logger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AI_Test", "AI_Test\AI_Test.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NineMensMorris", "NineMensMorris\NineMensMorris.csproj", "{40C4D20C-1E86-4199-AD53-754373C571E0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logger", "Logger\Logger.csproj", "{63846D1E-9F7E-4CF5-9EB5-0019970EC4C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{40C4D20C-1E86-4199-AD53-754373C571E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40C4D20C-1E86-4199-AD53-754373C571E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40C4D20C-1E86-4199-AD53-754373C571E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63846D1E-9F7E-4CF5-9EB5-0019970EC4C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63846D1E-9F7E-4CF5-9EB5-0019970EC4C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63846D1E-9F7E-4CF5-9EB5-0019970EC4C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63846D1E-9F7E-4CF5-9EB5-0019970EC4C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

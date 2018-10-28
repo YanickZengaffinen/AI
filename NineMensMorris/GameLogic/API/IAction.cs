@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace NineMensMorris.GameLogic
     /// <summary>
     /// An action a player makes in a game
     /// </summary>
-    public interface IAction
+    public interface IAction : ILoggable
     {
         /// <summary>
         /// The player that executes the action

@@ -32,5 +32,10 @@ namespace NineMensMorris.GameLogic
             Start = startPosition;
             Destination = target;
         }
+
+        public string ToLogString()
+        {
+            return $"Player {Player.ID} moved a man from {Start.ToString()} to {Destination.ToString()}";
+        }
     }
 }

@@ -26,5 +26,10 @@ namespace NineMensMorris.GameLogic
             Player = player;
             Target = target;
         }
+
+        public string ToLogString()
+        {
+            return $"Player {Player.ID} placed a man at {Target.ToString()}";
+        }
     }
 }
