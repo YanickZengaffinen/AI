@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NineMensMorris.GameLogic
@@ -11,6 +12,8 @@ namespace NineMensMorris.GameLogic
     public class AIPlayer : IPlayer
     {
         public int ID { get; private set; }
+
+        private bool active; //is this player currently active
 
         private Game game;
 
@@ -35,6 +38,8 @@ namespace NineMensMorris.GameLogic
 
         public void BeginTurn(Game game)
         {
+            active = true;
+
             switch(game.CheckPhase(this))
             {
                 case Phase.Placing:
@@ -54,13 +59,29 @@ namespace NineMensMorris.GameLogic
                     break;
             }
 
+            //if a man was killed 
+            if(CheckKillPending())
+            {
+                if(active) //and the player is still active there must be a second kill pending
+                {
+                    CheckKillPending(); //check pending kills again as one placed man may complete two mills
+                }
+            }
+        }
+
+        private bool CheckKillPending()
+        {
             //check if there are any kills pending for this player
-            while(game.HasKillPending(this))
+            if (game.HasKillPending(this))
             {
                 TryActions(game,
                     killController.GetRankedActions(game.GetPoints()),
                     (RatedObject<Kill> kill) => game.Kill(kill.Object));
+
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -94,7 +115,10 @@ namespace NineMensMorris.GameLogic
             }
         }
 
-        public void EndTurn(Game game) { }
+        public void EndTurn(Game game)
+        {
+            active = false;
+        }
 
     }
 }
