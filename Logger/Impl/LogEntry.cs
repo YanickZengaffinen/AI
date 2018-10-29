@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Logger
+namespace Logging
 {
     public class LogEntry<T> : ILogEntry<T> where T : ILoggable
     {

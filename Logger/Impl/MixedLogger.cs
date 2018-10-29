@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Logger
+namespace Logging
 {
     /// <summary>
     /// Logger that can log multiple loggable types and not just one

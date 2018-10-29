@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Logger
+namespace Logging
 {
     /// <summary>
     /// Generic logger

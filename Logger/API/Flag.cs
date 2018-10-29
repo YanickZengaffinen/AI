@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Logger
+namespace Logging
 {
     /// <summary>
     /// Allows a log entry to be flagged

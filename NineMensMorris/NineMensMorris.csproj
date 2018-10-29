@@ -71,11 +71,14 @@
     <Compile Include="GameLogic\Impl\Kill.cs" />
     <Compile Include="GameLogic\Impl\Move.cs" />
     <Compile Include="GameLogic\Impl\Placement.cs" />
+    <Compile Include="Replay\GameRecorder.cs" />
+    <Compile Include="Replay\GameReplay.cs" />
     <Compile Include="GameLogic\Players\AI\AIPlayer.cs" />
     <Compile Include="GameLogic\Players\AI\FlyingController.cs" />
     <Compile Include="GameLogic\Players\AI\KillController.cs" />
     <Compile Include="GameLogic\Players\AI\MoveController.cs" />
     <Compile Include="GameLogic\Players\AI\PlacementController.cs" />
+    <Compile Include="Replay\ReplayPlayer.cs" />
     <Compile Include="GameLogic\Structure\Board.cs" />
     <Compile Include="GameLogic\API\IPlayer.cs" />
     <Compile Include="GameLogic\API\Phase.cs" />
