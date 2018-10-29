@@ -12,7 +12,7 @@ namespace Logger
     {
         public LinkedList<ILogEntry<T>> Log { get; private set; } = new LinkedList<ILogEntry<T>>();
 
-        public event EventHandler<ILogEntry<T>> OnLogAdded;
+        public event EventHandler<ILogEntry<T>> onLogAdded;
 
         public void AddLog(T action, Flag flag = Flag.Normal)
         {
@@ -20,13 +20,21 @@ namespace Logger
             Log.AddLast(newEntry);
 
             //Call event
-            OnLogAdded?.Invoke(this, newEntry);
+            OnLogAdded(newEntry);
         }
 
         /// <summary>
         /// Method that creates a new log entry
         /// </summary>
         protected abstract ILogEntry<T> GenerateLogEntry(T action, Flag flag);
+
+        /// <summary>
+        /// Raises the onLogAdded Event
+        /// </summary>
+        protected void OnLogAdded(ILogEntry<T> newEntry)
+        {
+            onLogAdded?.Invoke(this, newEntry);
+        }
 
         public void Clear()
         {

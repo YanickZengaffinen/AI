@@ -16,7 +16,7 @@ namespace Logger
         /// <summary>
         /// Event called whenever a log is being added
         /// </summary>
-        event EventHandler<ILogEntry<T>> OnLogAdded;
+        event EventHandler<ILogEntry<T>> onLogAdded;
 
         /// <summary>
         /// Adds a log entry to this logger
