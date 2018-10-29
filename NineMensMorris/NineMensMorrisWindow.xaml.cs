@@ -2,6 +2,7 @@
 using AI.NeuralNetworks.ActivationFunctions;
 using NineMensMorris.GameLogic;
 using NineMensMorris.GameLogic.Players.AI;
+using NineMensMorris.Replay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,8 @@ namespace NineMensMorris
         private Button[] allPoints;
 
         private Game game;
+
+        private GameRecorder recorder; //records the game
 
         //Event that gets called whenever a board point is being clicked... 
         //int represents the active player at the moment of the click
@@ -108,6 +111,8 @@ namespace NineMensMorris
             //create the game
             game = new Game(a, b);
 
+            recorder = new GameRecorder(game);
+
             //subscribe to game events
             DisplayGame(game);
 
@@ -170,7 +175,12 @@ namespace NineMensMorris
         //Whenever the game has been finished
         private void Game_Finished(object sender, PlayerGameStatus status)
         {
-            MessageBox.Show($"player {status.Player.ID} won with {status.MenAlive} men still alive");
+            if(MessageBox.Show($"player {status.Player.ID} won with {status.MenAlive} men still alive.", "Do you want to watch the replay?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                var replayWindow = new NineMensMorrisReplayWindow();
+                replayWindow.SetRecorder(recorder);
+                replayWindow.Show();
+            }
         }
 
         //Whenever the user clicks on a point of the board

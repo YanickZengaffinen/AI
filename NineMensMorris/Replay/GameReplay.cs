@@ -7,27 +7,17 @@ namespace NineMensMorris.Replay
     /// <summary>
     /// Logger that logs game actions
     /// </summary>
-    public class GameReplay : Logger<IAction>
+    public class GameReplay
     {
-        public Game Game { get; }
-
-        private Dictionary<int, ReplayPlayer> players;
+        public ReplayGame Game { get; }
 
         private IEnumerator<ILogEntry<IAction>> enumerator;
         
         public GameReplay(GameRecorder recorder)
         {
-            var playerA = new ReplayPlayer();
-            var playerB = new ReplayPlayer();
+            Game = new ReplayGame();
 
-            players = new Dictionary<int, ReplayPlayer>() {
-                { Game.PlayerAId, playerA },
-                { Game.PlayerBId, playerB }
-            };
-
-            Game = new Game(playerA, playerB);
-
-            enumerator = Log.GetEnumerator();
+            enumerator = recorder.Log.GetEnumerator();
         }
 
         /// <summary>

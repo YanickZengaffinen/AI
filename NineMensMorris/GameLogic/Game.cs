@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NineMensMorris.GameLogic
 {
-    public class Game
+    public class Game : IGame
     {
         /// <summary>
         /// The id of points who do not belong to either one of the players
@@ -18,10 +18,8 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         public const int PlayerAId = -1, PlayerBId = 1;
 
-        /// <summary>
-        /// Representing the structure of a nine men's morris board
-        /// </summary>
         public Board Board { get; private set; }
+        public bool IsFinished { get; private set; }
 
         private const int menBudget = 9; //How many men can the players each place
         private const int startFlying = 3; //When should the player be allowed to fly his men?
@@ -34,7 +32,6 @@ namespace NineMensMorris.GameLogic
         private IPlayer inactivePlayer; //The player whos turn it currently isn't
 
         private int killsPending = 0; //How many kills are there pending for the current active player
-
 
         //Events
         /// <summary>
@@ -180,6 +177,8 @@ namespace NineMensMorris.GameLogic
 
                     if(IsDead(inactivePlayer))
                     {
+                        IsFinished = true;
+
                         onGameFinished?.Invoke(this, players[player.ID]);
                     }
 
@@ -210,7 +209,11 @@ namespace NineMensMorris.GameLogic
 
             //send notifications
             inactivePlayer.EndTurn(this);
-            activePlayer.BeginTurn(this);
+
+            if(!IsFinished)
+            {
+                activePlayer.BeginTurn(this);
+            }
         }
 
         /// <summary>
