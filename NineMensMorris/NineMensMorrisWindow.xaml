@@ -10,6 +10,7 @@
         <Menu HorizontalAlignment="Left" Height="33" Margin="10,10,0,0" VerticalAlignment="Top" Width="772">
             <Button Background="#FF2996D4" Height="33" Width="122" Content="Human vs Human" Click="NewHumanVsHumanGame"/>
             <Button Background="#FF2996D4" Height="33" Width="122" Content="AI vs Human" Click="NewHumanVsAIGame"/>
+            <Button Background="#FF2996D4" Height="33" Width="122" Content="Open Trainer" Click="OpenTrainer"/>
         </Menu>
 
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="654" VerticalAlignment="Top" Width="734" Margin="30,88,0,0">

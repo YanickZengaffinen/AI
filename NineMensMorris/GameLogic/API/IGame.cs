@@ -30,6 +30,12 @@ namespace NineMensMorris.GameLogic
         event EventHandler<Kill> onKilled;
 
         /// <summary>
+        /// Does a turn for the current player.
+        /// </summary>
+        /// <returns>True if the game is finished</returns>
+        bool NextTurn();
+
+        /// <summary>
         /// Try to place a men on a position for a player
         /// </summary>
         /// <returns> True if valid move </returns>

@@ -23,6 +23,8 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         /// <param name="survivalThreshold"> The amount of the population that will survive after each epoch (in percent). Must be less than 0.5! </param>
         public GeneticAlgorithm(int populationSize, ISpecies starter, float survivalThreshold)
         {
+            this.PopulationSize = populationSize;
+
             this.SurvivingMembers = (int)Math.Round(populationSize * survivalThreshold);
 
             //Create the initial population which equals the member and n - 1 mutations of it
@@ -49,12 +51,7 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         /// <returns>The enumeration of members that have survived</returns>
         protected virtual IEnumerable<ISpecies> KillLeastFit()
         {
-            foreach(var member in members)
-            {
-                member.CalculateScore();
-            }
-
-            return members.ToList().OrderBy(x => x.Score).Take(SurvivingMembers);
+            return members.ToList().OrderByDescending(x => x.CachedScore).Take(SurvivingMembers);
         }
 
         /// <summary>
@@ -62,9 +59,15 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         /// </summary>
         protected virtual void BreedFittest(IEnumerable<ISpecies> survivors)
         {
+            //clear the current members
+            members.Clear();
+
             //the population space that will be left once all members have duplicated
             int openSpace = PopulationSize - SurvivingMembers * 2;
-            double totalScore = survivors.Sum(x => x.Score); //the total score of all surviving members
+            double minScore = survivors.Min(x => x.CachedScore);
+            double totalScore = survivors.Sum(x => x.CachedScore - minScore); //the total score of all surviving members
+            double oneDivTotalScore = 1.0 / totalScore;
+
 
             for(int i = 0; i < SurvivingMembers; i++)
             {
@@ -77,7 +80,7 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
                 members.AddLast(member.Mutate());
 
                 //share open population space between the survivors taking into account their fitness
-                int budget = (int)(openSpace * member.Score);
+                int budget = (int)(openSpace * (member.CachedScore - minScore) * oneDivTotalScore);
                 for (int j = 0; j < budget; j++)
                 {
                     members.AddLast(member.Mutate());
@@ -88,7 +91,7 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
             int left = PopulationSize - members.Count();
             for (int i = 0; i < left; i++)
             {
-                members.AddLast(survivors.ElementAt(i).Mutate());
+                members.AddLast(survivors.ElementAt(i % SurvivingMembers).Mutate());
             }
         }
     }

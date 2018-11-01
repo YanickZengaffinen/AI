@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AI.Util;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -35,7 +36,7 @@ namespace AI.NeuralNetworks.FeedForward
 
         public ILayer Clone()
         {
-            return new Layer(Neurons.Select(x => x.Clone()).ToArray());
+            return new Layer(Neurons.SelectArray(x => x.Clone()));
         }
     }
 }

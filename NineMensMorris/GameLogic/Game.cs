@@ -18,20 +18,32 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         public const int PlayerAId = -1, PlayerBId = 1;
 
+        /// <summary>
+        /// The board of the game
+        /// </summary>
         public Board Board { get; private set; }
-        public bool IsFinished { get; private set; }
 
-        private const int menBudget = 9; //How many men can the players each place
-        private const int startFlying = 3; //When should the player be allowed to fly his men?
-        private const int gameLost = 2; //At how many men is the player considered dead
+        /// <summary>
+        /// Has one of the players less men on the board than the <see cref="gameLost"/>
+        /// </summary>
+        public bool IsFinished { get; protected set; }
+
+        /// <summary>
+        /// Has the game been aborted
+        /// </summary>
+        public bool IsAborted { get; protected set; }
+
+        protected const int menBudget = 9; //How many men can the players each place
+        protected const int startFlying = 3; //When should the player be allowed to fly his men?
+        protected const int gameLost = 2; //At how many men is the player considered dead
 
         //Both the players... should be private so no one can get their identities (at least not through the game class)
-        private Dictionary<int, PlayerGameStatus> players = new Dictionary<int, PlayerGameStatus>(2);
+        protected Dictionary<int, PlayerGameStatus> players = new Dictionary<int, PlayerGameStatus>(2);
 
-        private IPlayer activePlayer; //The player whos turn it currently is
-        private IPlayer inactivePlayer; //The player whos turn it currently isn't
+        protected IPlayer activePlayer; //The player whos turn it currently is
+        protected IPlayer inactivePlayer; //The player whos turn it currently isn't
 
-        private int killsPending = 0; //How many kills are there pending for the current active player
+        protected int killsPending = 0; //How many kills are there pending for the current active player
 
         //Events
         /// <summary>
@@ -66,14 +78,33 @@ namespace NineMensMorris.GameLogic
 
             activePlayer = playerA;
             inactivePlayer = playerB;
-            playerA.BeginTurn(this);
+        }
+
+        public bool NextTurn()
+        {
+            if (!IsFinished && !IsAborted)
+            {
+                activePlayer.BeginTurn(this);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Automatically starts the next turn once a player has finished
+        /// </summary>
+        public void DoGameLoop()
+        {
+            while (NextTurn()) ; //cannot be done recursively as there might be >10000 turns which causes a StackOverflowException
         }
 
         /// <summary>
         /// Try to place a men on a position for a player
         /// </summary>
         /// <returns> True if valid move </returns>
-        public bool Place(Placement placement)
+        public virtual bool Place(Placement placement)
         {
             var player = placement.Player;
             var position = placement.Target;
@@ -93,6 +124,8 @@ namespace NineMensMorris.GameLogic
                     {
                         SwitchTurn(); //End turn
                     }
+
+                    return true;
                 }
             }
 
@@ -103,7 +136,7 @@ namespace NineMensMorris.GameLogic
         /// Try to move a men from a position to 
         /// </summary>
         /// <returns> True if valid move </returns>
-        public bool Move(Move move)
+        public virtual bool Move(Move move)
         {
             var player = move.Player;
             var from = move.Start;
@@ -127,6 +160,8 @@ namespace NineMensMorris.GameLogic
                         //the turn is completed --> switch
                         SwitchTurn();
                     }
+
+                    return true;
                 }
             }
 
@@ -147,7 +182,7 @@ namespace NineMensMorris.GameLogic
         /// <summary>
         /// Try to kill a man at a certain position
         /// </summary>
-        public bool Kill(Kill kill)
+        public virtual bool Kill(Kill kill)
         {
             var player = kill.Player;
             var position = kill.Target;
@@ -195,7 +230,7 @@ namespace NineMensMorris.GameLogic
             return false;
         }
 
-        private void SwitchTurn()
+        protected void SwitchTurn()
         {
             if(HasKillPending(activePlayer))
             {
@@ -210,10 +245,6 @@ namespace NineMensMorris.GameLogic
             //send notifications
             inactivePlayer.EndTurn(this);
 
-            if(!IsFinished)
-            {
-                activePlayer.BeginTurn(this);
-            }
         }
 
         /// <summary>
@@ -275,6 +306,14 @@ namespace NineMensMorris.GameLogic
         public Point[] GetPoints()
         {
             return Board.AllPoints;
+        }
+
+        /// <summary>
+        /// Get the status of a player
+        /// </summary>
+        public PlayerGameStatus GetStatus(IPlayer player)
+        {
+            return players[player.ID];
         }
     }
 }

@@ -4,19 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{40C4D20C-1E86-4199-AD53-754373C571E0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NineMensMorris</RootNamespace>
-    <AssemblyName>NineMensMorris</AssemblyName>
+    <ProjectGuid>{DD383666-16F3-49E4-A6A0-4992F9947AD0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AI_UI</RootNamespace>
+    <AssemblyName>AI_UI</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,18 +22,14 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.2</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -57,58 +51,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="NineMensMorrisReplayWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NineMensMorrisWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="NeuralNetworks\GeneticAlgorithms\GeneticAlgorithmTrainer.xaml.cs">
+      <DependentUpon>GeneticAlgorithmTrainer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GameLogic\API\IAction.cs" />
-    <Compile Include="GameLogic\API\IGame.cs" />
-    <Compile Include="GameLogic\API\INeuralNetworkActionController.cs" />
-    <Compile Include="GameLogic\Game.cs" />
-    <Compile Include="GameLogic\Impl\Kill.cs" />
-    <Compile Include="GameLogic\Impl\Move.cs" />
-    <Compile Include="GameLogic\Impl\Placement.cs" />
-    <Compile Include="GeneticAlgorithms\GeneticGameAI.cs" />
-    <Compile Include="GeneticAlgorithms\SimulatedGame.cs" />
-    <Compile Include="NineMensMorrisReplayWindow.xaml.cs">
-      <DependentUpon>NineMensMorrisReplayWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Replay\GameRecorder.cs" />
-    <Compile Include="Replay\GameReplay.cs" />
-    <Compile Include="GameLogic\Players\AI\AIPlayer.cs" />
-    <Compile Include="GameLogic\Players\AI\FlyingController.cs" />
-    <Compile Include="GameLogic\Players\AI\KillController.cs" />
-    <Compile Include="GameLogic\Players\AI\MoveController.cs" />
-    <Compile Include="GameLogic\Players\AI\PlacementController.cs" />
-    <Compile Include="Replay\ReplayGame.cs" />
-    <Compile Include="Replay\ReplayPlayer.cs" />
-    <Compile Include="GameLogic\Structure\Board.cs" />
-    <Compile Include="GameLogic\API\IPlayer.cs" />
-    <Compile Include="GameLogic\API\Phase.cs" />
-    <Compile Include="GameLogic\Structure\Position.cs" />
-    <Compile Include="GameLogic\Players\HumanPlayer.cs" />
-    <Compile Include="GameLogic\Structure\Line.cs" />
-    <Compile Include="GameLogic\PlayerGameStatus.cs" />
-    <Compile Include="GameLogic\Structure\Point.cs" />
-    <Compile Include="GameLogic\Util\RatedObject.cs" />
-    <Compile Include="NineMensMorrisWindow.xaml.cs">
-      <DependentUpon>NineMensMorrisWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -132,26 +77,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="NeuralNetworks\GeneticAlgorithms\GeneticAlgorithmTrainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AI\AI.csproj">
-      <Project>{6A1AA4E4-57E0-4143-9118-18C9502207B8}</Project>
+      <Project>{6a1aa4e4-57e0-4143-9118-18c9502207b8}</Project>
       <Name>AI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AI_UI\AI_UI.csproj">
-      <Project>{dd383666-16f3-49e4-a6a0-4992f9947ad0}</Project>
-      <Name>AI_UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Logger\Logger.csproj">
-      <Project>{63846d1e-9f7e-4cf5-9eb5-0019970ec4c5}</Project>
-      <Name>Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\PerformanceTesting\PerformanceTesting.csproj">
       <Project>{4493bd63-b625-4176-987f-a047accdd078}</Project>
       <Name>PerformanceTesting</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

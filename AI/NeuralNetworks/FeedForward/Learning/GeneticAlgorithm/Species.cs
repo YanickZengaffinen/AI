@@ -9,7 +9,7 @@ namespace AI.NeuralNetworks.FeedForward.Learning
     {
         public INetwork Network { get; }
 
-        public double Score { get; private set; }
+        public double CachedScore { get; private set; }
 
         private MutationParameters mutationParams;
 
@@ -17,6 +17,8 @@ namespace AI.NeuralNetworks.FeedForward.Learning
 
         private bool reEvaluate;
         private bool evaluated = false;
+
+        private double lastScore; //the last score this species scored
 
         /// <summary>
         /// C'tor
@@ -33,22 +35,22 @@ namespace AI.NeuralNetworks.FeedForward.Learning
 
         public ISpecies Mutate()
         {
-            var mutatedNetwork = this.Network.Clone();
+            var networkClone = this.Network.Clone();
 
-            //no structural mutations allowed for fully connected feed forward neural networks
-            NetworkMutator.MutateBias(Network, mutationParams.BiasChance, mutationParams.BiasDeviation);
-            NetworkMutator.MutateWeights(Network, mutationParams.WeightChance, mutationParams.WeightDeviation);
+            networkClone.Mutate(mutationParams);
 
-            return new Species(mutatedNetwork, mutationParams, rankingFunc, reEvaluate);
+            return new Species(networkClone, mutationParams, rankingFunc, reEvaluate);
         }
 
-        public void CalculateScore()
+        public double CalculateScore()
         {
             if(reEvaluate || !evaluated)
             {
-                Score = rankingFunc.Invoke(this);
                 evaluated = true;
+                lastScore = rankingFunc.Invoke(this);
             }
+
+            return lastScore;
         }
     }
 }

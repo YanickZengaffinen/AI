@@ -1,7 +1,11 @@
 ﻿using AI.NeuralNetworks;
 using AI.NeuralNetworks.ActivationFunctions;
+using AI.NeuralNetworks.FeedForward.Learning;
+using AI.NeuralNetworks.GeneticAlgorithms;
+using AI_UI.NeuralNetworks.GeneticAlgorithms;
 using NineMensMorris.GameLogic;
 using NineMensMorris.GameLogic.Players.AI;
+using NineMensMorris.GeneticAlgorithms;
 using NineMensMorris.Replay;
 using System;
 using System.Collections.Generic;
@@ -17,6 +21,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using AI.Util;
+using PerformanceTesting.Pseudo;
 
 namespace NineMensMorris
 {
@@ -59,8 +66,51 @@ namespace NineMensMorris
                 a0, d0, g0
             };
 
+            //NewHumanVsHumanGame(null, null);
+        }
 
-            NewHumanVsHumanGame(null, null);
+        //opens a new trainer window
+        private void OpenTrainer(object sender, RoutedEventArgs e)
+        {
+            var mockBoard = new Board();
+
+            var starter = GenerateStarter(
+                (uint)mockBoard.AllPoints.Length,
+                (uint)mockBoard.GetAllMovesAdjacents(null).Length,
+                (uint)mockBoard.GetAllMoves(null).Length);
+
+            var geneticAlgorithm = new GeneticAlgorithm(10, starter, 0.25f);
+
+            var trainer = new GeneticAlgorithmTrainerWindow(geneticAlgorithm);
+
+            trainer.onNextEpochClick += (object s, EventArgs ea) => {
+                foreach(var species in geneticAlgorithm.Population)
+                {
+                    (species as GeneticGameAI).SetEnemy((geneticAlgorithm.Population[0] as GeneticGameAI));
+                }
+            };
+
+            trainer.Show();
+        }
+
+        /// <summary>
+        /// Generates a random starter AI
+        /// </summary>
+        private ISpecies GenerateStarter(in uint allPointsCnt, in uint allMovesAdjacentCnt, in uint allMovesCnt)
+        {
+            var placementNetwork = NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, allPointsCnt, allPointsCnt, 10);
+
+            var moveNetwork = NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, allPointsCnt, allMovesAdjacentCnt, 100, 100);
+
+            var killNetwork = NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, allPointsCnt, allPointsCnt, 100, 100);
+
+            var flyNetwork = NetworkGenerator.GenerateFullyConnectedFeedForwardNetwork(
+                SigmoidFunction.Instance, allPointsCnt, allMovesCnt, 100, 100);
+
+            return new GeneticGameAI(placementNetwork, moveNetwork, killNetwork, flyNetwork);
         }
 
         //Game where both players are humans
@@ -103,6 +153,8 @@ namespace NineMensMorris
                 ai, allMoves);
 
             ai.Init(placementCtrl, moveCtrl, killCtrl, flyingCtrl);
+
+            game.DoGameLoop();
         }
 
         //Creates a displayed game
@@ -121,6 +173,8 @@ namespace NineMensMorris
             {
                 button.Background = colorBrushMap[Game.HostId];
             }
+
+            game.DoGameLoop();
         }
 
         //Subscribes to the game events in order for it to be rendered correctly

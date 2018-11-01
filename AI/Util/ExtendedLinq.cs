@@ -20,6 +20,57 @@ namespace AI.Util
         }
 
         /// <summary>
+        /// Does what the standard .Select method does but with arrays... (no casting needed! --> good for huge arrays)
+        /// </summary>
+        public static U[] SelectArray<T, U>(this T[] array, Func<T, U> func)
+        {
+            int length = array.Length;
+
+            U[] rVal = new U[length];
+
+            for(int i = 0; i < length; i++)
+            {
+                rVal[i] = func.Invoke(array[i]);
+            }
+
+            return rVal;
+        }
+
+        /// <summary>
+        /// Does what the standard .Select method does but with lists --> no casting needed
+        /// </summary>
+        public static IList<U> SelectList<T, U>(this IList<T> list, Func<T, U> func)
+        {
+            int length = list.Count;
+
+            IList<U> rVal = new List<U>(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                rVal[i] = func.Invoke(list[i]);
+            }
+
+            return rVal;
+        }
+
+        /// <summary>
+        /// Does what the standard .Select method does but on an array and returns a list --> no casting
+        /// </summary>
+        public static U[] SelectArray<T, U>(this IList<T> list, Func<T, U> func)
+        {
+            int length = list.Count;
+
+            U[] rVal = new U[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                rVal[i] = func.Invoke(list[i]);
+            }
+
+            return rVal;
+        }
+
+        /// <summary>
         /// Get a row from a 2D array
         /// </summary>
         public static T[] GetRow<T>(this T[,] array, in int row)

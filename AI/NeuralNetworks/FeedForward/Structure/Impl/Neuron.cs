@@ -1,4 +1,5 @@
 ﻿using AI.NeuralNetworks.ActivationFunctions;
+using AI.Util;
 using System.Linq;
 
 namespace AI.NeuralNetworks.FeedForward
@@ -53,8 +54,8 @@ namespace AI.NeuralNetworks.FeedForward
         {
             return new Neuron(
                 Id, Bias, 
-                IncomingSynapses.Select(x => x.Clone()).ToArray(), 
-                OutgoingSynapses.Select(x => x.Clone()).ToArray(), 
+                IncomingSynapses?.SelectArray(x => x.Clone()), 
+                OutgoingSynapses?.SelectArray(x => x.Clone()), 
                 ActivationFunction
             );
         }

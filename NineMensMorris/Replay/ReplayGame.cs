@@ -64,5 +64,11 @@ namespace NineMensMorris.Replay
 
             return true;
         }
+
+        //No need for this
+        public bool NextTurn()
+        {
+            return false;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AI.NeuralNetworks.FeedForward;
+using AI.NeuralNetworks.GeneticAlgorithms;
 using AI.Util.RandomNumberGenerators;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,16 @@ namespace AI.NeuralNetworks
 
         private static readonly IRandom random = new StandardRandom();
         
+        /// <summary>
+        /// Mutates a feed forward network. Does not create a copy!
+        /// </summary>
+        public static void Mutate(this INetwork network, MutationParameters mutationParams)
+        {
+            //no structural mutations allowed for fully connected feed forward neural networks
+            MutateBias(network, mutationParams.BiasChance, mutationParams.BiasDeviation);
+            MutateWeights(network, mutationParams.WeightChance, mutationParams.WeightDeviation);
+        }
+
         /// <summary>
         /// Changes the weights of synapses in a network
         /// </summary>

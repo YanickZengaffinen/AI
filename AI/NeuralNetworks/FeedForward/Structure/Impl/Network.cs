@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AI.Util;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AI.NeuralNetworks.FeedForward
@@ -55,7 +56,7 @@ namespace AI.NeuralNetworks.FeedForward
 
         public INetwork Clone()
         {
-            return new Network(InputLayer.Clone(), HiddenLayers.Select(x => x.Clone()).ToArray(), OutputLayer.Clone());
+            return new Network(InputLayer.Clone(), HiddenLayers.SelectArray(x => x.Clone()), OutputLayer.Clone());
         }
 
 

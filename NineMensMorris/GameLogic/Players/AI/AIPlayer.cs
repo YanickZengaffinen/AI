@@ -13,15 +13,19 @@ namespace NineMensMorris.GameLogic
     {
         public int ID { get; private set; }
 
-        private bool active; //is this player currently active
+        protected bool active; //is this player currently active
 
-        private Game game;
+        protected Game game;
 
-        private PlacementController placerNetwork;
-        private MoveController moveController;
-        private KillController killController;
-        private FlyingController flyingController;
+        protected PlacementController placerNetwork;
+        protected MoveController moveController;
+        protected KillController killController;
+        protected FlyingController flyingController;
 
+        /// <summary>
+        /// Does all the initialization that cannot be done when the instance is being created.
+        /// (Controllers may need Game to be initialized already which needs instances of players)
+        /// </summary>
         public void Init(PlacementController placerNetwork, MoveController moveController, KillController killController, FlyingController flyingController)
         {
             this.placerNetwork = placerNetwork;
@@ -69,7 +73,7 @@ namespace NineMensMorris.GameLogic
             }
         }
 
-        private bool CheckKillPending()
+        protected bool CheckKillPending()
         {
             //check if there are any kills pending for this player
             if (game.HasKillPending(this))
@@ -87,7 +91,7 @@ namespace NineMensMorris.GameLogic
         /// <summary>
         /// Tries to place down a man in the order that is suggested by the neural network
         /// </summary>
-        private void Place(Game game)
+        protected void Place(Game game)
         {
             var rankedPoints = placerNetwork.GetRankedActions(game.GetPoints());
 
@@ -104,7 +108,7 @@ namespace NineMensMorris.GameLogic
         /// <summary>
         /// Tries to execute different actions until one is finally successful and returns true
         /// </summary>
-        private void TryActions<T>(Game game, IList<RatedObject<T>> objects, Func<RatedObject<T>, bool> func, int maxCount = int.MaxValue)
+        protected void TryActions<T>(Game game, IList<RatedObject<T>> objects, Func<RatedObject<T>, bool> func, int maxCount = int.MaxValue)
         {
             for(int i = 0; i < objects.Count && i < maxCount; i++)
             {
