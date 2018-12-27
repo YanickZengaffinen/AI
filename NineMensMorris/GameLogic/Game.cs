@@ -33,6 +33,11 @@ namespace NineMensMorris.GameLogic
         /// </summary>
         public bool IsAborted { get; protected set; }
 
+        /// <summary>
+        /// Automatically switch turns after a player has finished his
+        /// </summary>
+        public bool AutoStartNextTurn { get; set; } = false;
+
         protected const int menBudget = 9; //How many men can the players each place
         protected const int startFlying = 3; //When should the player be allowed to fly his men?
         protected const int gameLost = 2; //At how many men is the player considered dead
@@ -245,6 +250,10 @@ namespace NineMensMorris.GameLogic
             //send notifications
             inactivePlayer.EndTurn(this);
 
+            if(AutoStartNextTurn)
+            {
+                NextTurn();
+            }
         }
 
         /// <summary>

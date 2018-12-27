@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="GeneticAlgorithmTrainer" Height="800" Width="800">
     <Grid Margin="0,0,0,0">
-        <ListView x:Name="ListView_EpochDetail" HorizontalAlignment="Left" Height="674" VerticalAlignment="Top" Width="502" Margin="275,10,0,0" SelectionChanged="EpochDetail_SelectionChanged">
+        <ListView x:Name="ListView_EpochDetail" HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="502" Margin="275,284,0,0" SelectionChanged="EpochDetail_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
@@ -22,6 +22,24 @@
             </ListView.View>
         </ListView>
         <Button x:Name="Button_NextEpoch" Content="Next Epoch" HorizontalAlignment="Right" Height="70" Margin="0,689,15,0" VerticalAlignment="Top" Width="219" Click="NextEpoch_Click"/>
+        <Label Content="Epoch Info" HorizontalAlignment="Left" Margin="280,10,0,0" VerticalAlignment="Top" Width="126" FontWeight="Bold"/>
+        <Grid HorizontalAlignment="Left" Height="248" Margin="280,36,0,0" VerticalAlignment="Top" Width="497">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="50"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Time:" Grid.Row="0" Grid.Column="0"></Label>
+            <Label Name="Label_EpochTime" Content="00:00:00" Grid.Row="0" Grid.Column="1"></Label>
+            <Label Content="Population Size:" Grid.Row="1" Grid.Column="0"></Label>
+            <Label Name="Label_EpochSize" Content="0" Grid.Row="1" Grid.Column="1"></Label>
+        </Grid>
+
 
     </Grid>
 </Window>

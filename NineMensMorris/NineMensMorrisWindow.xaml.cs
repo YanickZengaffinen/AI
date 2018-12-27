@@ -69,7 +69,41 @@ namespace NineMensMorris
             //NewHumanVsHumanGame(null, null);
         }
 
+        /// <summary>
+        /// Starts a displayed game between two players
+        /// </summary>
+        public void StartDisplayedGame(IPlayer a, IPlayer b)
+        {
+            CreateDisplayedNewGame(a, b);
+
+            game.AutoStartNextTurn = true;
+            game.NextTurn();
+        }
+
+        /// <summary>
+        /// Starts a human vs ai game
+        /// </summary>
+        public void PlayAgainstAI(AIPlayer ai)
+        {
+            StartDisplayedGame(CreateHumanPlayer(), ai);
+        }
+
+        /// <summary>
+        /// Starts a game human vs genetic AI
+        /// </summary>
+        public void PlayAgainstGeneticAI(GeneticGameAI ai)
+        {
+            var aiPlayer = new AIPlayer();
+            CreateDisplayedNewGame(CreateHumanPlayer(), aiPlayer);
+
+            ai.OverrideEmptyAIPlayer(aiPlayer, game);
+
+            game.AutoStartNextTurn = true;
+            game.NextTurn();
+        }
+
         //opens a new trainer window
+        private SpeciesDetailWindow training_speciesDetailWindow;
         private void OpenTrainer(object sender, RoutedEventArgs e)
         {
             var mockBoard = new Board();
@@ -79,9 +113,21 @@ namespace NineMensMorris
                 (uint)mockBoard.GetAllMovesAdjacents(null).Length,
                 (uint)mockBoard.GetAllMoves(null).Length);
 
-            var geneticAlgorithm = new GeneticAlgorithm(10, starter, 0.25f);
+            var geneticAlgorithm = new GeneticAlgorithm(50, starter, 0.25f);
 
             var trainer = new GeneticAlgorithmTrainerWindow(geneticAlgorithm);
+
+            //detail window of species
+            training_speciesDetailWindow = new SpeciesDetailWindow();
+            training_speciesDetailWindow.Show();
+            training_speciesDetailWindow.onPlayClicked += (s, info) => {
+                PlayAgainstGeneticAI(info.AI);
+            };
+
+            //subscribe to trainer events
+            trainer.onSpeciesSelected += (s, species) => {
+                training_speciesDetailWindow.SetInfo((species as GeneticGameAI).CachedSpeciesInfo);
+            };
 
             trainer.onNextEpochClick += (object s, EventArgs ea) => {
                 foreach(var species in geneticAlgorithm.Population)
@@ -119,15 +165,12 @@ namespace NineMensMorris
             //clear the eventhandler
             boardPointClicked = null;
 
-            CreateDisplayedNewGame(CreateHumanPlayer(), CreateHumanPlayer());
+            StartDisplayedGame(CreateHumanPlayer(), CreateHumanPlayer());
         }
 
         //Game where a human plays against an AI
         private void NewHumanVsAIGame(object sender, RoutedEventArgs e)
         {
-            //clear the eventhandler
-            boardPointClicked = null;
-
             var ai = new AIPlayer();
 
             CreateDisplayedNewGame(CreateHumanPlayer(), ai);
@@ -154,7 +197,8 @@ namespace NineMensMorris
 
             ai.Init(placementCtrl, moveCtrl, killCtrl, flyingCtrl);
 
-            game.DoGameLoop();
+
+            PlayAgainstAI(ai);
         }
 
         //Creates a displayed game
@@ -173,8 +217,6 @@ namespace NineMensMorris
             {
                 button.Background = colorBrushMap[Game.HostId];
             }
-
-            game.DoGameLoop();
         }
 
         //Subscribes to the game events in order for it to be rendered correctly

@@ -51,6 +51,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NeuralNetworks\GeneticAlgorithms\EpochInfo.cs" />
     <Compile Include="NeuralNetworks\GeneticAlgorithms\GeneticAlgorithmTrainer.xaml.cs">
       <DependentUpon>GeneticAlgorithmTrainer.xaml</DependentUpon>
     </Compile>

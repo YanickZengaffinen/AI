@@ -22,6 +22,16 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         ISpecies[] Population { get; }
 
         /// <summary>
+        /// Event that gets called whenever an epoch has been finished
+        /// </summary>
+        event EventHandler onEpochFinished;
+
+        /// <summary>
+        /// Event that raises whenever all the species scores have been calculated during an epoch
+        /// </summary>
+        event EventHandler onScoresCalculated;
+
+        /// <summary>
         /// Simulates all the species, lets the top few percent survive and breeds them
         /// </summary>
         void DoEpoch();

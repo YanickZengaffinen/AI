@@ -19,16 +19,21 @@ namespace NineMensMorris.GeneticAlgorithms
     {
         public double CachedScore { get; private set; }
 
-        private const int maxMoves = 200; //at how many moves will the game be aborted
+        /// <summary>
+        /// Info about how well this AI did
+        /// </summary>
+        public SpeciesInfo CachedSpeciesInfo { get; private set; }
+
+        private const int maxMoves = 50; //at how many moves will the game be aborted
 
         private const double 
-            winMultiplier = 10000, 
+            winMultiplier = 25000, 
             abortMultiplier = 1000,
             killMultiplier = 1500,
             aliveMultiplier = 1000;
 
         private const double 
-            loseMultiplier = -5000,
+            loseMultiplier = -10000,
             flyMultiplier = -20,
             moveMultiplier = -20;
 
@@ -85,7 +90,13 @@ namespace NineMensMorris.GeneticAlgorithms
             OverrideEmptyAIPlayer(aiPlayer, simulatedGame);
             enemy.OverrideEmptyAIPlayer(enemyAIPlayer, simulatedGame);
 
-            return CachedScore = simulatedGame.Simulate();
+            SpeciesInfo info;
+            var rVal = simulatedGame.Simulate(out info);
+
+            this.CachedSpeciesInfo = info;
+            info.AI = this;
+
+            return CachedScore = rVal;
         }
 
         /// <summary>

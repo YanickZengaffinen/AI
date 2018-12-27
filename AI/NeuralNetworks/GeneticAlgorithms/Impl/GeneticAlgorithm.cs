@@ -14,7 +14,12 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
         public ISpecies[] Population => members.ToArray();
 
         private LinkedList<ISpecies> members = new LinkedList<ISpecies>();
-        
+
+
+        public event EventHandler onEpochFinished;
+
+        public event EventHandler onScoresCalculated;
+
         /// <summary>
         /// C'tor
         /// </summary>
@@ -37,12 +42,19 @@ namespace AI.NeuralNetworks.GeneticAlgorithms
 
         public void DoEpoch()
         {
-            foreach(var ranker in members)
+            foreach(var member in members)
             {
-                ranker.CalculateScore();
+                member.CalculateScore();
             }
 
+            //members.AsParallel().ForAll(x => x.CalculateScore());
+
+            //scores have been calculated
+            onScoresCalculated?.Invoke(this, EventArgs.Empty);
+
             BreedFittest(KillLeastFit());
+
+            onEpochFinished?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

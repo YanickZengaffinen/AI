@@ -13,12 +13,12 @@ namespace NineMensMorris.GeneticAlgorithms
     public class SimulatedGame : Game
     {
         //Store the players separately to destinguish between enemy and me
-        private AIPlayer me;
-        private AIPlayer enemy;
+        public AIPlayer Me { get; }
+        public AIPlayer Enemy { get; }
 
         #region Multipliers
         //How much should the different actions be weighed
-        private double winMultiplier;
+        public double winMultiplier;
         private double abortMultiplier;
         private double killMultiplier;
         private double aliveMultiplier;
@@ -39,15 +39,15 @@ namespace NineMensMorris.GeneticAlgorithms
         private int maxMoveCnt; //how many moves until abortion, not including false moves
 
         //Count illegal moves/kills/placement/flights
-        private int falseMovesCnt;
-        private int falseKillsCnt;
-        private int falsePlacementCnt;
-        private int falseFlightsCnt;
+        public int FalseMovesCnt { get; private set; }
+        public int FalseKillsCnt { get; private set; }
+        public int FalsePlacementCnt { get; private set; }
+        public int FalseFlightsCnt { get; private set; }
 
 
         //Count legal moves/flights
-        private int moveCnt;
-        private int flightCnt;
+        public int MoveCnt { get; private set; }
+        public int FlightCnt { get; private set; }
 
         /// <summary>
         /// C'tor
@@ -57,8 +57,8 @@ namespace NineMensMorris.GeneticAlgorithms
             in double loseMultiplier, in double falseKillMultiplier, in double falseMoveMultiplier, in double falseFlightMultiplier, in double falsePlacementMultiplier,
             in int maxMoves) : base(enemy, me)
         {
-            this.enemy = enemy;
-            this.me = me;
+            this.Enemy = enemy;
+            this.Me = me;
 
             this.winMultiplier = winMultiplier;
             this.killMultiplier = killMultiplier;
@@ -80,27 +80,34 @@ namespace NineMensMorris.GeneticAlgorithms
         /// <summary>
         /// Calculates the score of a player
         /// </summary>
-        public double Simulate()
+        public double Simulate(out SpeciesInfo info)
         {
             double rVal = 0;
 
+            //reset values
+            MoveCnt = 0;
+
+
+
             DoGameLoop();
 
-            var enemyStatus = GetStatus(enemy);
-            var myStatus = GetStatus(me);
+            var enemyStatus = GetStatus(Enemy);
+            var myStatus = GetStatus(Me);
+
+            var menKilled = (enemyStatus.MenPlaced - enemyStatus.MenAlive);
 
             //calculate the score
-            rVal += (enemyStatus.MenPlaced - enemyStatus.MenAlive) * killMultiplier; //kills
+            rVal += menKilled * killMultiplier; //kills
             rVal += myStatus.MenAlive * aliveMultiplier; //survivors
 
-            rVal += flyMultiplier * flightCnt; //flights
-            rVal += moveMultiplier * moveCnt; //moves
+            rVal += flyMultiplier * FlightCnt; //flights
+            rVal += moveMultiplier * MoveCnt; //moves
 
             //illegal actions
-            rVal += falseKillMultiplier * falseKillsCnt; //kills
-            rVal += falseFlightMultiplier * falseFlightsCnt; //flights
-            rVal += falseMoveMultiplier * falseMovesCnt; //moves
-            rVal += falsePlacementMultiplier * falsePlacementCnt; //placements
+            rVal += falseKillMultiplier * FalseKillsCnt; //kills
+            rVal += falseFlightMultiplier * FalseFlightsCnt; //flights
+            rVal += falseMoveMultiplier * FalseMovesCnt; //moves
+            rVal += falsePlacementMultiplier * FalsePlacementCnt; //placements
 
             if(IsAborted)
             {
@@ -108,7 +115,7 @@ namespace NineMensMorris.GeneticAlgorithms
             }
             else
             {
-                if (!IsDead(me)) //winner
+                if (!IsDead(Me)) //winner
                 {
                     rVal += winMultiplier;
                 }
@@ -118,18 +125,20 @@ namespace NineMensMorris.GeneticAlgorithms
                 }
             }
 
+            info = new SpeciesInfo(IsAborted, !IsDead(Me), myStatus.MenAlive, menKilled, FalseKillsCnt, MoveCnt, FalseMovesCnt, FlightCnt, FalseFlightsCnt, FalsePlacementCnt);
+
             return rVal;
         }
 
         //Override to count invalid placements
         public override bool Place(Placement placement)
         {
-            if(placement.Player != me)
+            if(placement.Player != Me)
                 return base.Place(placement);
 
             if(!base.Place(placement)) //invalid placement
             {
-                falsePlacementCnt++;
+                FalsePlacementCnt++;
                 return false;
             }
 
@@ -141,29 +150,29 @@ namespace NineMensMorris.GeneticAlgorithms
         //Override to count moves/flights
         public override bool Move(Move move)
         {
-            if (move.Player != me)
+            if (move.Player != Me)
                 return base.Move(move);
 
-            if(moveCnt >= maxMoveCnt) //check if the game needs to be aborted
+            if(MoveCnt + FlightCnt >= maxMoveCnt) //check if the game needs to be aborted
             {
                 IsAborted = true;
             }
 
             if(!base.Move(move)) //invalid move
             {
-                if(CheckPhase(me) == Phase.Flying)
-                    falseFlightsCnt++;
+                if(CheckPhase(Me) == Phase.Flying)
+                    FalseFlightsCnt++;
                 else
-                    falseMovesCnt++;
+                    FalseMovesCnt++;
 
                 return false;
             }
             else
             {
-                if (CheckPhase(me) == Phase.Flying)
-                    flightCnt++;
+                if (CheckPhase(Me) == Phase.Flying)
+                    FlightCnt++;
                 else
-                    moveCnt++;
+                    MoveCnt++;
 
                 return true;
             }
@@ -172,12 +181,12 @@ namespace NineMensMorris.GeneticAlgorithms
         //Override to count illegal kills
         public override bool Kill(Kill kill)
         {
-            if(kill.Player != me)
+            if(kill.Player != Me)
                 return base.Kill(kill);
 
             if(!base.Kill(kill)) //invalid kill
             {
-                falseKillsCnt++;
+                FalseKillsCnt++;
                 return false;
             }
 

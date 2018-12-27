@@ -47,10 +47,14 @@ namespace PerformanceTesting.Pseudo
         /// <summary>
         /// Stop the performance test with the given id
         /// </summary>
-        public static TimeSpan To(long id)
+        public static TimeSpan To(long id, bool delete = true)
         {
             var rVal = DateTime.Now - startTimes[id];
-            startTimes.Remove(id);
+
+            if(delete)
+            {
+                startTimes.Remove(id);
+            }
 
             return rVal;
         }
